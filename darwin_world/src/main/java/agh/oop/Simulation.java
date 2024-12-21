@@ -11,6 +11,7 @@ public class Simulation implements Runnable {
     private SimulationConfiguration config;
     private GenotypeCreator genotypeCreator;
     private PlantCreator plantCreator;
+    private long time;
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
@@ -22,6 +23,7 @@ public class Simulation implements Runnable {
     public void run() {
         while (running.get()) {
             advance();
+            time++;
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -50,9 +52,7 @@ public class Simulation implements Runnable {
 
     private void moveAnimals() {
         for(var animal : animals) {
-            map.removeAnimal(animal);
-            animal.move();
-            map.addAnimal(animal);
+            map.moveAnimal(animal, animal.move());
         }
     }
 
@@ -85,9 +85,11 @@ public class Simulation implements Runnable {
             var parent1 = strongest.getLast();
             var parent2 = strongest.get(strongest.size() - 2);
             var genotype = genotypeCreator.mixAnimals(parent1, parent2);
-            var child = new Animal(position, MapDirection.createRandomMapDirection(), genotype, config.initialAnimalEnergy());
+            var child = new Animal(position, MapDirection.createRandomMapDirection(), genotype, config.initialAnimalEnergy(), time);
             parent1.addChild(child);
             parent2.addChild(child);
+            animals.add(child);
+            map.addAnimal(child);
         }
     }
 
@@ -96,7 +98,7 @@ public class Simulation implements Runnable {
     }
 
     private static Comparator<Animal> getAnimalComparator() {
-        return Comparator.comparing(Animal::getEnergy).thenComparing(Animal::getAge).thenComparing(Animal::countDescendants);
+        return Comparator.comparing(Animal::getEnergy).thenComparing((Animal a) -> -a.getBirthDate()).thenComparing(Animal::countDescendants);
     }
 
     private ArrayList<Animal> getStrongest(Collection<Animal> candidates) {

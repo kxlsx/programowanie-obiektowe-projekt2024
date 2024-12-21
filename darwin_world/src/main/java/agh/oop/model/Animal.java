@@ -4,13 +4,14 @@ import java.util.List;
 
 public class Animal {
 
-    public Animal(Vector2d position, MapDirection facing, Genotype genes, int energy) {}
+    public Animal(Vector2d position, MapDirection facing, Genotype genes, int energy, long birthDate) {}
 
     public int getEnergy() {
         return 0;
     }
 
-    public int getAge() {
+    // potrzebne, zeby wiedziec jaki jest stary
+    public long getBirthDate() {
 
     }
 
@@ -26,7 +27,8 @@ public class Animal {
         return false;
     }
 
-    public void move() {}
+    // zakladam, ze on zwraca tam gdzie pojdzie i se przesuwa costam na kolejny ruch
+    public MapDirection move() {}
 
     public void addChild(Animal child) {}
 }
