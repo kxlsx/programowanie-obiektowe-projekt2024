@@ -1,4 +1,4 @@
-package agh.oop.model.util;
+package agh.oop.model;
 
 public enum MapDirectionOctal implements MapDirection {
     NORTH,

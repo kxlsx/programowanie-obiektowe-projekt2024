@@ -1,6 +1,4 @@
-package agh.oop.model.util;
-
-import java.util.Map;
+package agh.oop.model;
 
 public interface MapDirection {
     Vector2d toUnitVector();

@@ -1,7 +1,6 @@
-package agh.oop.model.util;
+package agh.oop.model;
 
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public abstract class GenotypeCreator {
     protected final int geneCount;
