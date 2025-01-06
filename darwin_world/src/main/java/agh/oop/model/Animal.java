@@ -56,11 +56,11 @@ public class Animal implements WorldElement {
     }
 
     private void loseEnergy() {
-        energy -= 1; //TODO: check if its by 1
+        energy -= 1;
     }
   
     public boolean isDead() {
-        return false; // TODO:
+        return energy <= 0;
     }
 
     public void move(MoveValidator validator) {

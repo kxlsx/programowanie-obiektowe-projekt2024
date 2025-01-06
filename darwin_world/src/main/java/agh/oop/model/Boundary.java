@@ -1,5 +1,9 @@
 package agh.oop.model;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class Boundary {
     private final Vector2d lowerLeft;
     private final Vector2d upperRight;
@@ -14,8 +18,24 @@ public class Boundary {
     }
 
     public boolean contains(int x, int y) {
-        return x >= lowerLeft.getX() && x <= upperRight.getX()
-                && y >= lowerLeft.getY() && y <= upperRight.getY();
+        return !isOobLeft(x) && !isOobRight(x)
+                && !isOobDown(y) && isOobUp(y);
+    }
+
+    public boolean isOobLeft(int x) {
+        return x < lowerLeft.getX();
+    }
+
+    public boolean isOobRight(int x) {
+        return x > upperRight.getX();
+    }
+
+    public boolean isOobDown(int y) {
+        return y < lowerLeft.getY();
+    }
+
+    public boolean isOobUp(int y) {
+        return y > upperRight.getY();
     }
 
     public int width() {
@@ -36,5 +56,16 @@ public class Boundary {
 
     public int area() {
         return width() * height();
+    }
+
+    public List<Vector2d> containedVectors() {
+        List<Vector2d> vectors = new ArrayList<>();
+
+        for(int i = 0; i < width(); i++) {
+            for(int j = 0; j < height(); j++) {
+                vectors.add(lowerLeft.add(new Vector2d(i, j)));
+            }
+        }
+        return vectors;
     }
 }

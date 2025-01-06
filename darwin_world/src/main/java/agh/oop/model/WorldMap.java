@@ -1,35 +1,108 @@
 package agh.oop.model;
 
-import java.util.List;
+import agh.oop.model.exception.InvalidAnimalPositionException;
+import agh.oop.model.exception.InvalidPlantPositionException;
+
+import java.util.*;
 
 
 // wydaje mi sie, ze mapa powina byc mapa setow animali
 
 public class WorldMap implements MoveValidator{
+    private final Boundary bounds;
+    private final Map<Vector2d, Set<Animal>> animals;
+    private final Map<Vector2d, Plant> plants;
 
-    // po to, zeby nie iterowac po calej mapie zwraca po prostu zbior pozycji animali
-    public List<Vector2d> getAnimalsPositions() {}
+    public WorldMap(Boundary bounds) {
+        this.bounds = bounds;
+        animals = new HashMap<>();
+        plants = new HashMap<>();
+    }
 
-    public List<Animal> animalsAt(Vector2d position) {}
+    public Boundary getBounds() {
+        return bounds;
+    }
 
-    public void removeAnimal(Animal animal) {}
+    public Set<WorldElement> objectsAt(Vector2d position) {
+        Set<WorldElement> objs = new HashSet<>();
 
-    public void addAnimal(Animal animal) {}
+        Set<Animal> animalsSet = animalsAt(position);
+        if(animalsSet != null) {
+            animalsAt(position).forEach(animal -> objs.add(animal));
+        }
+        Plant plant = plantAt(position);
+        if(plant != null) {
+            objs.add(plant);
+        }
+        return objs;
+    }
 
-    // mysle, ze move validator jest niepotrzebny i mapa sama sobie bedzie radzic
-    public void moveAnimal(Animal animal) {}
+    public Set<Vector2d> getAnimalsPositions() {
+        return animals.keySet();
+    }
+
+    public Set<Animal> animalsAt(Vector2d position) {
+        return animals.get(position);
+    }
+
+    public void removeAnimal(Animal animal) {
+        animals.get(animal.getPosition()).remove(animal);
+    }
+
+    public void addAnimal(Animal animal) throws InvalidAnimalPositionException{
+        if(!bounds.contains(animal.getPosition())) {
+            throw new InvalidAnimalPositionException("Animal position: " + animal.toString() + " is out of bounds");
+        }
+
+        animals.computeIfAbsent(
+                animal.getPosition(),
+                k -> new HashSet<>()
+        ).add(animal);
+    }
+
+    public void moveAnimal(Animal animal) {
+        removeAnimal(animal);
+        animal.move(this);
+        addAnimal(animal);
+    }
 
     // tutaj zalozylem, ze jest tylko jeden plant ale tego nie jestem pewien
-    public Plant plantAt(Vector2d position) {}
+    public Plant plantAt(Vector2d position) {
+        return plants.get(position);
+    }
 
-    public void addPlant(Plant plant) {}
+    public void addPlant(Plant plant) throws InvalidPlantPositionException{
+        for(Vector2d position : plant.getBounds().containedVectors()) {
+            if(plantAt(position) != null) {
+                throw new InvalidPlantPositionException("Another plant already occupies " + position);
+            }
+        }
+        plant.getBounds().containedVectors().forEach(v -> plants.put(v, plant));
+    }
 
-    public void removePlant(Plant plant) {}
-
+    public void removePlant(Plant plant) {
+        plant.getBounds().containedVectors().forEach(v -> plants.remove(v));
+    }
 
     @Override
     public Vector2d correctPosition(Vector2d position) {
-        //TODO:
-        return null;
+        int x = position.getX();
+        int y = position.getY();
+
+        // prevent from exiting bounds vertically
+        if(bounds.isOobDown(y)) {
+            y = bounds.getLowerLeft().getY();
+        } else if (bounds.isOobUp(y)) {
+            y = bounds.getUpperRight().getY();
+        }
+
+        // loop back around if exiting horizontally
+        if(bounds.isOobLeft(x)) {
+            x = bounds.getUpperRight().getX();
+        } else if (bounds.isOobRight(x)) {
+            x = bounds.getLowerLeft().getX();
+        }
+
+        return new Vector2d(x, y);
     }
 }
