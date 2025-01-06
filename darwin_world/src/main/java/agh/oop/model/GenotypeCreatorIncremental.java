@@ -1,8 +1,8 @@
 package agh.oop.model;
 
 public class GenotypeCreatorIncremental extends GenotypeCreator {
-    public GenotypeCreatorIncremental(int geneCount, int geneMax) {
-        super(geneCount, geneMax);
+    public GenotypeCreatorIncremental(int geneCount) {
+        super(geneCount);
     }
 
     public int mutate(int gene) {

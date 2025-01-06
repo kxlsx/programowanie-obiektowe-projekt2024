@@ -10,8 +10,8 @@ public enum MapDirection{
     WEST,
     NORTH_WEST;
 
-    private final static MapDirection[] VALUES = MapDirection.values();
-    private final static int VALUE_COUNT = VALUES.length;
+    final static MapDirection[] VALUES = MapDirection.values();
+    final static int VALUE_COUNT = VALUES.length;
 
     public Vector2d toUnitVector() {
         return switch(this) {

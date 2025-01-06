@@ -3,12 +3,11 @@ package agh.oop.model;
 import java.util.stream.IntStream;
 
 public abstract class GenotypeCreator {
+    protected static final int GENE_MAX = MapDirection.VALUE_COUNT;
     protected final int geneCount;
-    protected final int geneMax;
 
-    public GenotypeCreator(int geneCount, int geneMax){
+    public GenotypeCreator(int geneCount){
         this.geneCount = geneCount;
-        this.geneMax = geneMax;
     }
 
     public Genotype create() {
@@ -72,7 +71,7 @@ public abstract class GenotypeCreator {
     }
 
     protected int randomGene() {
-        return (int) (Math.random() * geneMax);
+        return (int) (Math.random() * GENE_MAX);
     }
 
     protected static boolean randomBoolean() {

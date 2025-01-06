@@ -1,8 +1,8 @@
 package agh.oop.model;
 
 public class GenotypeCreatorFullRandom extends GenotypeCreator {
-    public GenotypeCreatorFullRandom(int geneCount, int geneMax) {
-        super(geneCount, geneMax);
+    public GenotypeCreatorFullRandom(int geneCount) {
+        super(geneCount);
     }
 
     @Override
