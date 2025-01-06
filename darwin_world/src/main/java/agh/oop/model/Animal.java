@@ -10,7 +10,15 @@ public class Animal implements WorldElement {
     private Genotype genes;
     private int energy;
     private List<Animal> children;
-
+  
+    public Animal() {
+      //TODO:
+    }
+  
+    public long getBirthDate() {
+        //TODO: this
+    }
+  
     public Genotype getGenes() {
         return genes;
     }
@@ -46,6 +54,10 @@ public class Animal implements WorldElement {
     private void loseEnergy() {
         energy -= 1; //TODO: check if its by 1
     }
+  
+    public boolean isDead() {
+        return false; // TODO:
+    }
 
     public void move(MoveValidator validator) {
         facing = genes.getNextMapDirection(facing);
@@ -54,6 +66,10 @@ public class Animal implements WorldElement {
         Vector2d newPos = position.add(off);
         position = validator.correctPosition(newPos);
         loseEnergy();
+    }
+  
+    public void addChild() {
+        //TODO:
     }
 
     public int countDescendants() {
