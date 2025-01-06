@@ -1,5 +1,8 @@
 package agh.oop.model;
 
-public class MapDirection {
-    public static MapDirection createRandomMapDirection() {}
+public interface MapDirection {
+    Vector2d toUnitVector();
+    MapDirection rotateRight(int times);
+    String toString();
+    static MapDirection createRandomMapDirection(); //TODO:
 }

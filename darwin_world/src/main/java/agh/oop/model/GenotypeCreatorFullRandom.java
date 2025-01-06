@@ -1,4 +1,4 @@
-package agh.oop.model.util;
+package agh.oop.model;
 
 public class GenotypeCreatorFullRandom extends GenotypeCreator {
     public GenotypeCreatorFullRandom(int geneCount, int geneMax) {
