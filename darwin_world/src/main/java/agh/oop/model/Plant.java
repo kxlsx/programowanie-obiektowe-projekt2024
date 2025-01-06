@@ -1,12 +1,12 @@
 package agh.oop.model;
 
-public class Plant {
+public class Plant implements WorldElement{
     private final int energy;
-    private final Boundary field;
+    private final Boundary bounds;
 
-    Plant(int energy, Boundary field) {
+    Plant(int energy, Boundary bounds) {
         this.energy = energy;
-        this.field = field;
+        this.bounds = bounds;
     }
 
     Plant(int energy, Vector2d position) {
@@ -16,4 +16,5 @@ public class Plant {
     public int getEnergyMultiplier() {
         return energy;
     }
+    public Boundary getBounds() { return bounds; }
 }
