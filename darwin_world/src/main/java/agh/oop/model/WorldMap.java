@@ -5,9 +5,6 @@ import agh.oop.model.exception.InvalidPlantPositionException;
 
 import java.util.*;
 
-
-// wydaje mi sie, ze mapa powina byc mapa setow animali
-
 public class WorldMap implements MoveValidator{
     private final Boundary bounds;
     private final Map<Vector2d, Set<Animal>> animals;
@@ -28,7 +25,7 @@ public class WorldMap implements MoveValidator{
 
         Set<Animal> animalsSet = animalsAt(position);
         if(animalsSet != null) {
-            animalsAt(position).forEach(animal -> objs.add(animal));
+            objs.addAll(animalsSet);
         }
         Plant plant = plantAt(position);
         if(plant != null) {
@@ -51,12 +48,12 @@ public class WorldMap implements MoveValidator{
 
     public void addAnimal(Animal animal) throws InvalidAnimalPositionException{
         if(!bounds.contains(animal.getPosition())) {
-            throw new InvalidAnimalPositionException("Animal position: " + animal.toString() + " is out of bounds");
+            throw new InvalidAnimalPositionException("Animal position: " + animal.getPosition() + " is out of bounds");
         }
 
         animals.computeIfAbsent(
                 animal.getPosition(),
-                k -> new HashSet<>()
+                _ -> new HashSet<>()
         ).add(animal);
     }
 
@@ -66,13 +63,15 @@ public class WorldMap implements MoveValidator{
         addAnimal(animal);
     }
 
-    // tutaj zalozylem, ze jest tylko jeden plant ale tego nie jestem pewien
     public Plant plantAt(Vector2d position) {
         return plants.get(position);
     }
 
     public void addPlant(Plant plant) throws InvalidPlantPositionException{
         for(Vector2d position : plant.getBounds().containedVectors()) {
+            if(!bounds.contains(position)) {
+                throw new InvalidPlantPositionException("Plant position: " + position + "is out of bounds");
+            }
             if(plantAt(position) != null) {
                 throw new InvalidPlantPositionException("Another plant already occupies " + position);
             }
