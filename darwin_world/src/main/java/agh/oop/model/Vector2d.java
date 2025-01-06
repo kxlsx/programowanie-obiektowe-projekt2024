@@ -2,6 +2,9 @@ package agh.oop.model;
 
 import java.util.Objects;
 
+/**
+ * Object representing a vector in Z^2.
+ */
 public class Vector2d {
     private final int x;
     private final int y;
