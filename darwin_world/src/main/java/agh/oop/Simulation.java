@@ -52,7 +52,7 @@ public class Simulation implements Runnable {
 
     private void moveAnimals() {
         for(var animal : animals) {
-            map.moveAnimal(animal, animal.move());
+            map.moveAnimal(animal);
         }
     }
 

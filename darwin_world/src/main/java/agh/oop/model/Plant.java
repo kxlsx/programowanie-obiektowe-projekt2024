@@ -1,6 +1,6 @@
 package agh.oop.model;
 
-public class Plant {
+public class Plant implements WorldElement{
     private final int energy;
     private final Boundary field;
 

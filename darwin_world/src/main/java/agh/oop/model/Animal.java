@@ -1,22 +1,26 @@
 package agh.oop.model;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class Animal implements WorldElement {
     private Vector2d position;
     private MapDirection facing;
-    private Genotype genes;
     private int energy;
-    private List<Animal> children;
+    private final List<Animal> children;
+    private final Genotype genes;
+    private final long birthDate;
   
-    public Animal() {
-      //TODO:
+    public Animal(Vector2d position, MapDirection facing, Genotype genes, int energy, long birthDate) {
+      this.position = position;
+      this.facing = facing;
+      this.genes = genes;
+      this.energy = energy;
+      this.birthDate = birthDate;
+      this.children = new ArrayList<>();
     }
   
     public long getBirthDate() {
-        //TODO: this
+        return birthDate;
     }
   
     public Genotype getGenes() {
@@ -68,8 +72,8 @@ public class Animal implements WorldElement {
         loseEnergy();
     }
   
-    public void addChild() {
-        //TODO:
+    public void addChild(Animal child) {
+        children.add(child);
     }
 
     public int countDescendants() {
