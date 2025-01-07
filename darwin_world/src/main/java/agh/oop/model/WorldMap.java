@@ -177,4 +177,29 @@ public class WorldMap implements MoveValidator{
 
         return new Vector2d(x, y);
     }
+
+    public void print() {
+        for(int y = bounds.getLowerLeft().getY(); y <= bounds.getUpperRight().getY(); y++) {
+            for(int x = bounds.getLowerLeft().getX(); x <= bounds.getUpperRight().getX(); x++) {
+                var animals = animalsAt(new Vector2d(x, y));
+                if(animals != null && !animals.isEmpty()) {
+                    System.out.print(String.valueOf(animals.size()) + " ");
+                }
+                else {
+                    var plant = plantAt(new Vector2d(x, y));
+                    if(plant != null) {
+                        System.out.print('#' + " ");
+                    }
+                    else {
+                        System.out.print('.' + " ");
+                    }
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+    }
 }
