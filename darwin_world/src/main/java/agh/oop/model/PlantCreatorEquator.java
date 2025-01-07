@@ -6,11 +6,11 @@ public class PlantCreatorEquator implements PlantCreator {
     private final Boundary equator;
 
 
-    PlantCreatorEquator(int plantsPerDay, Boundary mapRegion) {
+    public PlantCreatorEquator(int plantsPerDay, Boundary mapRegion) {
         this.mapRegion = mapRegion;
         equator = new Boundary(
-                new Vector2d(mapRegion.getLowerLeft().getX(), mapRegion.getLowerLeft().getY() + (int)(mapRegion.height() * 0.2)),
-                new Vector2d(mapRegion.getUpperRight().getX(), mapRegion.getLowerLeft().getY() + (int)(mapRegion.height() * 0.8))
+                new Vector2d(mapRegion.getLowerLeft().getX(), mapRegion.getLowerLeft().getY() + (int)(mapRegion.height() * 0.4)),
+                new Vector2d(mapRegion.getUpperRight().getX(), mapRegion.getLowerLeft().getY() + (int)(mapRegion.height() * 0.6))
         );
         final double normalizationFactor = equator.area() * 0.8 + (mapRegion.area() - equator.area()) * 0.2;
         baseGrowthProbability = normalizationFactor * plantsPerDay / mapRegion.area();
@@ -27,7 +27,8 @@ public class PlantCreatorEquator implements PlantCreator {
                 else {
                     probability = baseGrowthProbability * 0.2;
                 }
-                if(Math.random() <= probability) {
+                double tmp = Math.random();
+                if(Math.random() <= probability && worldMap.plantAt(new Vector2d(x, y)) == null) {
                     worldMap.addPlant(new Plant(1, new Vector2d(x, y)));
                 }
             }

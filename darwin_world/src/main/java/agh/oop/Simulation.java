@@ -6,14 +6,50 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Simulation implements Runnable {
-    private WorldMap map;
-    private ArrayList<Animal> animals;
-    private SimulationConfiguration config;
-    private GenotypeCreator genotypeCreator;
-    private PlantCreator plantCreator;
+    private final WorldMap map;
+    private final ArrayList<Animal> animals;
+    private final SimulationConfiguration config;
+    private final GenotypeCreator genotypeCreator;
+    private final PlantCreator plantCreator;
     private long time;
 
     private final AtomicBoolean running = new AtomicBoolean(true);
+
+
+    public Simulation(SimulationConfiguration config) {
+        this.config = config;
+        var mapBoundary = new Boundary(new Vector2d(0, 0), config.mapSize());
+        map = new WorldMap(mapBoundary);
+        animals = new ArrayList<>();
+
+        genotypeCreator = switch (config.mutationMode()) {
+            case MutationMode.FULL_RANDOM -> new GenotypeCreatorFullRandom(config.genomeLength());
+            case MutationMode.INCREMENTAL -> new GenotypeCreatorIncremental(config.genomeLength());
+        };
+
+        plantCreator = switch (config.plantGrowthMode()) {
+            case PlantGrowthMode.EQUATOR -> new PlantCreatorEquator(config.plantGrowthPerDay(), mapBoundary);
+            case PlantGrowthMode.BOUNTIFUL_HARVEST ->
+                    new PlantCreatorBountifulHarvest(
+                            config.plantGrowthPerDay(),
+                            new Boundary(new Vector2d(0, 0), new Vector2d(3, 3)), // TODO
+                            mapBoundary
+                    );
+        };
+
+        time = 0;
+
+
+        // create initial animals
+        for(int i = 0; i < config.initialNumberOfAnimals(); i++) {
+            var animal = new Animal(new Vector2d(0, 0), MapDirection.createRandomMapDirection(), genotypeCreator.create(), config.initialAnimalEnergy(), time); // TODO random position
+            animals.add(animal);
+            map.addAnimal(animal);
+        }
+
+        // create initial plants
+        plantCreator.createPlants(map); // TODO use initial number of plants
+    }
 
     public void stop() {
         running.set(false);
@@ -38,6 +74,7 @@ public class Simulation implements Runnable {
         feedAnimals();
         reproduceAnimals();
         growPlants();
+        map.print();
     }
 
     private void removeDeadAnimals() {
@@ -63,6 +100,7 @@ public class Simulation implements Runnable {
         for (var position : positions) {
             var plant = map.plantAt(position);
             if(plant != null && !map.animalsAt(position).isEmpty()) {
+                animalsPerPlant.putIfAbsent(plant, new ArrayList<>());
                 animalsPerPlant.get(plant).addAll(map.animalsAt(position));
             }
         }

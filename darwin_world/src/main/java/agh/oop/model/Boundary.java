@@ -1,7 +1,6 @@
 package agh.oop.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -17,7 +16,7 @@ public class Boundary {
      * @param lowerLeft the lower-left vertex of the rectangle.
      * @param upperRight the upper-right vertex of the rectangle.
      */
-    Boundary(Vector2d lowerLeft, Vector2d upperRight) {
+    public Boundary(Vector2d lowerLeft, Vector2d upperRight) {
         this.lowerLeft = lowerLeft;
         this.upperRight = upperRight;
     }
@@ -37,7 +36,7 @@ public class Boundary {
      */
     public boolean contains(int x, int y) {
         return !isOobLeft(x) && !isOobRight(x)
-                && !isOobDown(y) && isOobUp(y);
+                && !isOobDown(y) && !isOobUp(y);
     }
 
     /**
@@ -76,14 +75,14 @@ public class Boundary {
      * @return the width of the boundary
      */
     public int width() {
-        return upperRight.getX() - lowerLeft.getX();
+        return upperRight.getX() - lowerLeft.getX() + 1;
     }
 
     /**
      * @return the height of the boundary
      */
     public int height() {
-        return upperRight.getY() - lowerLeft.getY();
+        return upperRight.getY() - lowerLeft.getY() + 1;
     }
 
     /**
