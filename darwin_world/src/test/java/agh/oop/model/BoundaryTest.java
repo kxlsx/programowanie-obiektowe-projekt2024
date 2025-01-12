@@ -1,11 +1,8 @@
-package model;
+package agh.oop.model;
 
-import agh.oop.model.Boundary;
-import agh.oop.model.Vector2d;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
