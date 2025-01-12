@@ -51,4 +51,8 @@ public class Genotype {
     public IntStream stream() {
         return Arrays.stream(genes);
     }
+
+    public int[] getGenes() {
+        return genes;
+    }
 }
