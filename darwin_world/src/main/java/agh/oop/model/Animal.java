@@ -103,8 +103,15 @@ public class Animal implements WorldElement {
     /**
      *  Decrements the energy value by 1.
      */
-    private void loseEnergy() {
+    public void loseEnergy() {
         energy -= 1;
+    }
+
+    /**
+     *  Decrements the energy value by amount.
+     */
+    public void loseEnergy(int amount) {
+        energy -= amount;
     }
 
     /**
