@@ -15,12 +15,17 @@ public class Simulation implements Runnable {
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
-
     public Simulation(SimulationConfiguration config) {
+        this(config, List.of());
+    }
+
+    public Simulation(SimulationConfiguration config, List<MapChangeListener> map_observers) {
         this.config = config;
         var mapBoundary = new Boundary(new Vector2d(0, 0), config.mapSize());
         map = new WorldMap(mapBoundary);
         animals = new ArrayList<>();
+
+        map_observers.forEach(ob -> map.addObserver(ob));
 
         genotypeCreator = switch (config.mutationMode()) {
             case MutationMode.FULL_RANDOM -> new GenotypeCreatorFullRandom(config.genomeLength());
@@ -38,7 +43,6 @@ public class Simulation implements Runnable {
         };
 
         time = 0;
-
 
         // create initial animals
         for(int i = 0; i < config.initialNumberOfAnimals(); i++) {

@@ -19,6 +19,8 @@ public class WorldMap implements MoveValidator{
     private final Map<Vector2d, Set<Animal>> animals;
     private final Map<Vector2d, Plant> plants;
 
+    private final List<MapChangeListener> observers;
+
     /**
      * Create a new WorldMap defined by the
      * passed rectangle.
@@ -28,6 +30,16 @@ public class WorldMap implements MoveValidator{
         this.bounds = bounds;
         animals = new HashMap<>();
         plants = new HashMap<>();
+
+        observers = List.of();
+    }
+
+    /**
+     * Add observer to map.
+     * @param observer the observer.
+     */
+    public void addObserver(MapChangeListener observer) {
+        observers.add(observer);
     }
 
     /**
@@ -79,6 +91,8 @@ public class WorldMap implements MoveValidator{
      */
     public void removeAnimal(Animal animal) {
         animals.get(animal.getPosition()).remove(animal);
+
+        observers.forEach(ob -> ob.onAnimalRemove(animal));
     }
 
     /**
@@ -95,6 +109,8 @@ public class WorldMap implements MoveValidator{
                 animal.getPosition(),
                 _ -> new HashSet<>()
         ).add(animal);
+
+        observers.forEach(ob -> ob.onAnimalAdd(animal));
     }
 
     /**
@@ -132,6 +148,8 @@ public class WorldMap implements MoveValidator{
             }
         }
         plant.getBounds().containedVectors().forEach(v -> plants.put(v, plant));
+
+        observers.forEach(ob -> ob.onPlantAdd(plant));
     }
 
     /**
@@ -140,6 +158,8 @@ public class WorldMap implements MoveValidator{
      */
     public void removePlant(Plant plant) {
         plant.getBounds().containedVectors().forEach(v -> plants.remove(v));
+
+        observers.forEach(ob -> ob.onPlantRemove(plant));
     }
 
     /**
