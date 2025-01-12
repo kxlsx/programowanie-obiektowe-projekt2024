@@ -16,7 +16,7 @@ public abstract class GenotypeCreator {
      * Genotypes with geneCount genes.
      * @param geneCount the number of genes that the Genotypes should have.
      */
-    public GenotypeCreator(int geneCount){
+    public GenotypeCreator(int geneCount) {
         this.geneCount = geneCount;
     }
 

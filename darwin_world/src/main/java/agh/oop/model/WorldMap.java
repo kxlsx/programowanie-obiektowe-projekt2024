@@ -79,6 +79,9 @@ public class WorldMap implements MoveValidator{
      */
     public void removeAnimal(Animal animal) {
         animals.get(animal.getPosition()).remove(animal);
+        if(animals.get(animal.getPosition()).isEmpty()) {
+            animals.remove(animal.getPosition());
+        }
     }
 
     /**

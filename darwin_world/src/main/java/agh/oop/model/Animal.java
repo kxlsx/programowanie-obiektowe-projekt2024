@@ -23,7 +23,7 @@ public class Animal implements WorldElement {
      * @param birthDate the day the animal was created.
      * @see Genotype
      */
-    public Animal(Vector2d position, MapDirection facing, Genotype genes, int energy, long birthDate) {
+    public  Animal(Vector2d position, MapDirection facing, Genotype genes, int energy, long birthDate) {
       this.position = position;
       this.facing = facing;
       this.genes = genes;
