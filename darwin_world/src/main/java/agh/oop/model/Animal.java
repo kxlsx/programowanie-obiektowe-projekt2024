@@ -23,7 +23,7 @@ public class Animal implements WorldElement {
      * @param birthDate the day the animal was created.
      * @see Genotype
      */
-    public Animal(Vector2d position, MapDirection facing, Genotype genes, int energy, long birthDate) {
+    public  Animal(Vector2d position, MapDirection facing, Genotype genes, int energy, long birthDate) {
       this.position = position;
       this.facing = facing;
       this.genes = genes;
@@ -103,8 +103,15 @@ public class Animal implements WorldElement {
     /**
      *  Decrements the energy value by 1.
      */
-    private void loseEnergy() {
+    public void loseEnergy() {
         energy -= 1;
+    }
+
+    /**
+     *  Decrements the energy value by amount.
+     */
+    public void loseEnergy(int amount) {
+        energy -= amount;
     }
 
     /**

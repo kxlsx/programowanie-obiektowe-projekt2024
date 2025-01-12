@@ -127,7 +127,10 @@ public class Simulation implements Runnable {
             var parent1 = strongest.getLast();
             var parent2 = strongest.get(strongest.size() - 2);
             var genotype = genotypeCreator.mixAnimals(parent1, parent2);
-            var child = new Animal(position, MapDirection.createRandomMapDirection(), genotype, config.initialAnimalEnergy(), time);
+
+            parent1.loseEnergy(config.reproductionCost());
+            parent2.loseEnergy(config.reproductionCost());
+            var child = new Animal(position, MapDirection.createRandomMapDirection(), genotype, config.reproductionCost() * 2, time);
             parent1.addChild(child);
             parent2.addChild(child);
             animals.add(child);
