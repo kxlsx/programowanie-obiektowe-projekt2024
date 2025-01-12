@@ -90,10 +90,11 @@ public class WorldMap implements MoveValidator{
      * @param animal animal to remove.
      */
     public void removeAnimal(Animal animal) {
+        animals.get(animal.getPosition()).remove(animal);
+        observers.forEach(ob -> ob.onAnimalRemove(animal));
+
         if(animals.get(animal.getPosition()).isEmpty()) {
             animals.remove(animal.getPosition());
-          
-            observers.forEach(ob -> ob.onAnimalRemove(animal));
         }
     }
 
