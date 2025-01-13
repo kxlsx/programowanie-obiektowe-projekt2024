@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class WorldMapTest {
     @Test
     void animalsPositions() {
@@ -80,4 +82,23 @@ class WorldMapTest {
         assert(map.plantAt(new Vector2d(1, 1)) == null);
     }
 
+    @Test
+    void wrap() {
+        var map = new WorldMap(new Boundary(new Vector2d(1, 1), new Vector2d(5, 5)));
+        var animal = new Animal(new Vector2d(1, 1), MapDirection.WEST, new Genotype(new int[]{0}, 0), 5, 0);
+
+        map.addAnimal(animal);
+        map.moveAnimal(animal);
+        assertEquals(animal.getPosition(), new Vector2d(5, 1));
+    }
+
+    @Test
+    void clamp() {
+        var map = new WorldMap(new Boundary(new Vector2d(1, 1), new Vector2d(5, 5)));
+        var animal = new Animal(new Vector2d(1, 1), MapDirection.SOUTH, new Genotype(new int[]{0}, 0), 5, 0);
+
+        map.addAnimal(animal);
+        map.moveAnimal(animal);
+        assertEquals(animal.getPosition(), new Vector2d(1, 1));
+    }
 }
