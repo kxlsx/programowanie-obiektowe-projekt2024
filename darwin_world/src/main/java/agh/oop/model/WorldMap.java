@@ -31,7 +31,7 @@ public class WorldMap implements MoveValidator{
         animals = new HashMap<>();
         plants = new HashMap<>();
 
-        observers = List.of();
+        observers = new ArrayList<>();
     }
 
     /**

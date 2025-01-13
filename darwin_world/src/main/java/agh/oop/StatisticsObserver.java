@@ -62,17 +62,11 @@ public class StatisticsObserver implements MapChangeListener {
     }
 
     private void objectAdded(Vector2d position) {
-        objectsOnCell.compute(
-                position,
-                (k, v) -> objectsOnCell.put(k, v + 1)
-        );
+        objectsOnCell.merge(position, 1, (a, b) -> a + b);
     }
 
     private void objectRemoved(Vector2d position) {
-        objectsOnCell.compute(
-                position,
-                (k, v) -> objectsOnCell.put(k, v - 1)
-        );
+        objectsOnCell.merge(position, -1, (a, b) -> a + b);
     }
 
     public int aliveAnimalCount() {

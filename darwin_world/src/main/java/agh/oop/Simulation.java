@@ -63,7 +63,6 @@ public class Simulation implements Runnable {
     public void run() {
         while (running.get()) {
             advance();
-            time++;
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -78,6 +77,7 @@ public class Simulation implements Runnable {
         feedAnimals();
         reproduceAnimals();
         growPlants();
+        time++;
         map.print();
     }
 
