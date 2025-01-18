@@ -2,7 +2,6 @@ package agh.oop.model;
 
 public class PlantCreatorBountifulHarvest implements PlantCreator {
     private final float plantGrowthProbability;
-    //private final float bigPlantGrowthProbability;
     private final Boundary bigPlantsRegion;
 
     public PlantCreatorBountifulHarvest(int plantsPerDay, Boundary bigPlantsRegion, Boundary mapRegion) {
@@ -10,17 +9,19 @@ public class PlantCreatorBountifulHarvest implements PlantCreator {
         this.bigPlantsRegion = bigPlantsRegion;
     }
 
+    private boolean diceGrow(WorldMap worldMap, Vector2d position) {
+        return Math.random() <= plantGrowthProbability && worldMap.plantAt(position) != null;
+    }
+
     @Override
     public void createPlants(WorldMap worldMap) {
-        for(int x = worldMap.getBounds().getLowerLeft().getX(); x < worldMap.getBounds().getUpperRight().getX(); x++) {
-            for(int y = worldMap.getBounds().getLowerLeft().getY(); y < worldMap.getBounds().getUpperRight().getY(); y++) {
-                if(Math.random() <= plantGrowthProbability && worldMap.plantAt(new Vector2d(x, y)) != null) {
-                    if(bigPlantsRegion.contains(new Vector2d(x, y))) {
-                        worldMap.addPlant(new Plant(4, new Boundary(new Vector2d(x, y), new Vector2d(x + 1, y + 1))));
-                    }
-                    else {
-                        worldMap.addPlant(new Plant(1, new Vector2d(x, y)));
-                    }
+        for(var position : worldMap.getBounds().containedVectors()) {
+            if(diceGrow(worldMap, position)) {
+                if(bigPlantsRegion.contains(position)) {
+                    worldMap.addPlant(new Plant(4, new Boundary(position, position.add(new Vector2d(1, 1)))));
+                }
+                else {
+                    worldMap.addPlant(new Plant(1, position));
                 }
             }
         }

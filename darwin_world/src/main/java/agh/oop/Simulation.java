@@ -116,8 +116,17 @@ public class Simulation implements Runnable {
         }
     }
 
+    private Animal reproduce(Animal parent1, Animal parent2) {
+        var genotype = genotypeCreator.mixAnimals(parent1, parent2);
+        parent1.loseEnergy(config.reproductionCost());
+        parent2.loseEnergy(config.reproductionCost());
+        var child = new Animal(parent1.getPosition(), MapDirection.createRandomMapDirection(), genotype, config.reproductionCost() * 2, time);
+        parent1.addChild(child);
+        parent2.addChild(child);
+        return child;
+    }
+
     private void reproduceAnimals() {
-        Random rand = new Random();
         var positions = map.getAnimalsPositions();
         for (var position : positions) {
             if(map.animalsAt(position).size() < 2) {
@@ -130,13 +139,7 @@ public class Simulation implements Runnable {
                 continue;
             }
 
-            var genotype = genotypeCreator.mixAnimals(parent1, parent2);
-
-            parent1.loseEnergy(config.reproductionCost());
-            parent2.loseEnergy(config.reproductionCost());
-            var child = new Animal(position, MapDirection.createRandomMapDirection(), genotype, config.reproductionCost() * 2, time);
-            parent1.addChild(child);
-            parent2.addChild(child);
+            var child = reproduce(parent1, parent2);
             animals.add(child);
             map.addAnimal(child);
         }
