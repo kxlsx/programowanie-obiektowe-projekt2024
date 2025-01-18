@@ -15,8 +15,8 @@ public enum MapDirection{
     WEST,
     NORTH_WEST;
 
-    final static MapDirection[] VALUES = MapDirection.values();
-    final static int VALUE_COUNT = VALUES.length;
+    public final static MapDirection[] VALUES = MapDirection.values();
+    public final static int VALUE_COUNT = VALUES.length;
 
     /**
      * Returns the direction as a Vector2D

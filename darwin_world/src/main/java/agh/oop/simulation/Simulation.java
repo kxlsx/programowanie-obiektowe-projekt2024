@@ -1,52 +1,48 @@
-package agh.oop;
+package agh.oop.simulation;
 
+import agh.oop.model.animal.*;
+import agh.oop.simulation.config.MutationMode;
+import agh.oop.simulation.config.PlantGrowthMode;
+import agh.oop.simulation.config.SimulationConfiguration;
 import agh.oop.model.*;
+import agh.oop.model.plant.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Simulation implements Runnable {
     private final WorldMap map;
-    private final ArrayList<Animal> animals;
-    private final SimulationConfiguration config;
-    private final GenotypeCreator genotypeCreator;
+    private final List<Animal> animals;
+    private final AnimalCreator animalCreator;
     private final PlantCreator plantCreator;
+    private final int energyFromPlant;
+    private final int reproductionEnergyThreshold;
     private long time;
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
-    public Simulation(SimulationConfiguration config) {
-        this(config, List.of());
-    }
-
-    public Simulation(SimulationConfiguration config, List<MapChangeListener> map_observers) {
-        this.config = config;
-        var mapBoundary = new Boundary(new Vector2d(0, 0), config.mapSize());
-        map = new WorldMap(mapBoundary);
-        animals = new ArrayList<>();
-
-        map_observers.forEach(ob -> map.addObserver(ob));
-
-        genotypeCreator = switch (config.mutationMode()) {
-            case MutationMode.FULL_RANDOM -> new GenotypeCreatorFullRandom(config.genomeLength());
-            case MutationMode.INCREMENTAL -> new GenotypeCreatorIncremental(config.genomeLength());
-        };
-
-        plantCreator = switch (config.plantGrowthMode()) {
-            case PlantGrowthMode.EQUATOR -> new PlantCreatorEquator(config.plantGrowthPerDay(), mapBoundary);
-            case PlantGrowthMode.BOUNTIFUL_HARVEST ->
-                    new PlantCreatorBountifulHarvest(
-                            config.plantGrowthPerDay(),
-                            new Boundary(new Vector2d(0, 0), new Vector2d(3, 3)), // TODO
-                            mapBoundary
-                    );
-        };
-
+    public Simulation(
+            WorldMap map,
+            List<Animal> animals,
+            AnimalCreator animalCreator,
+            PlantCreator plantCreator,
+            int energyFromPlant,
+            int reproductionEnergyThreshold,
+            int initialNumberOfAnimals,
+            int initialNumberOfPlants
+    ){
+        this.map = map;
+        this.animals = animals;
+        this.animalCreator = animalCreator;
+        this.plantCreator = plantCreator;
+        this.energyFromPlant = energyFromPlant;
+        this.reproductionEnergyThreshold = reproductionEnergyThreshold;
         time = 0;
 
+
         // create initial animals
-        for(int i = 0; i < config.initialNumberOfAnimals(); i++) {
-            var animal = new Animal(new Vector2d(0, 0), MapDirection.createRandomMapDirection(), genotypeCreator.create(), config.initialAnimalEnergy(), time); // TODO random position
+        for(int i = 0; i < initialNumberOfAnimals; i++) {
+            var animal = animalCreator.create(time);
             animals.add(animal);
             map.addAnimal(animal);
         }
@@ -103,27 +99,17 @@ public class Simulation implements Runnable {
         var positions = map.getAnimalsPositions();
         for (var position : positions) {
             var plant = map.plantAt(position);
-            if(plant != null && !map.animalsAt(position).isEmpty()) {
+            if (plant != null && !map.animalsAt(position).isEmpty()) {
                 animalsPerPlant.putIfAbsent(plant, new ArrayList<>());
                 animalsPerPlant.get(plant).addAll(map.animalsAt(position));
             }
         }
 
-        for(var plant : animalsPerPlant.keySet()) {
+        for (var plant : animalsPerPlant.keySet()) {
             var strongest = getStrongest(animalsPerPlant.get(plant));
-            strongest.getLast().addEnergy(plant.getEnergyMultiplier() * config.energyFromPlant());
+            strongest.getLast().addEnergy(plant.getEnergyMultiplier() * energyFromPlant);
             map.removePlant(plant);
         }
-    }
-
-    private Animal reproduce(Animal parent1, Animal parent2) {
-        var genotype = genotypeCreator.mixAnimals(parent1, parent2);
-        parent1.loseEnergy(config.reproductionCost());
-        parent2.loseEnergy(config.reproductionCost());
-        var child = new Animal(parent1.getPosition(), MapDirection.createRandomMapDirection(), genotype, config.reproductionCost() * 2, time);
-        parent1.addChild(child);
-        parent2.addChild(child);
-        return child;
     }
 
     private void reproduceAnimals() {
@@ -135,11 +121,11 @@ public class Simulation implements Runnable {
             var strongest = getStrongest(map.animalsAt(position));
             var parent1 = strongest.getLast();
             var parent2 = strongest.get(strongest.size() - 2);
-            if(parent2.getEnergy() < config.reproductionEnergyThreshold()) {
+            if(parent2.getEnergy() < reproductionEnergyThreshold) {
                 continue;
             }
 
-            var child = reproduce(parent1, parent2);
+            var child = animalCreator.reproduce(parent1, parent2, time);
             animals.add(child);
             map.addAnimal(child);
         }

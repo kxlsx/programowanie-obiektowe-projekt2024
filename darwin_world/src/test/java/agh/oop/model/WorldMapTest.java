@@ -1,5 +1,8 @@
 package agh.oop.model;
 
+import agh.oop.model.animal.Animal;
+import agh.oop.model.animal.Genotype;
+import agh.oop.model.plant.Plant;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;

@@ -1,8 +1,5 @@
-package agh.oop;
+package agh.oop.simulation.config;
 
-import agh.oop.model.MapType;
-import agh.oop.model.MutationMode;
-import agh.oop.model.PlantGrowthMode;
 import agh.oop.model.Vector2d;
 
 import java.io.Serializable;

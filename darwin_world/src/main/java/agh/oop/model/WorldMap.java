@@ -1,7 +1,9 @@
 package agh.oop.model;
 
+import agh.oop.model.animal.Animal;
 import agh.oop.model.exception.OutOfBoundsException;
 import agh.oop.model.exception.PlantOverlapException;
+import agh.oop.model.plant.Plant;
 
 import java.util.*;
 

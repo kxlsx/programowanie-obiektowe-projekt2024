@@ -1,9 +1,10 @@
-package agh.oop;
+package agh.oop.simulation;
 
 import agh.oop.model.*;
+import agh.oop.model.animal.Animal;
+import agh.oop.model.plant.Plant;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class StatisticsObserver implements MapChangeListener {
     private final Set<Animal> aliveAnimals;
@@ -61,6 +62,7 @@ public class StatisticsObserver implements MapChangeListener {
         }
     }
 
+    //FIXME:
     private void objectAdded(Vector2d position) {
         objectsOnCell.merge(position, 1, (a, b) -> a + b);
     }

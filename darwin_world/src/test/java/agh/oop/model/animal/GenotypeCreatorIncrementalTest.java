@@ -1,4 +1,4 @@
-package agh.oop.model;
+package agh.oop.model.animal;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,8 @@
-package agh.oop.model;
+package agh.oop.model.plant;
+
+import agh.oop.model.Boundary;
+import agh.oop.model.Vector2d;
+import agh.oop.model.WorldMap;
 
 public class PlantCreatorEquator implements PlantCreator {
     private final double baseGrowthProbability;
