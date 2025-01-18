@@ -11,21 +11,23 @@ public class Simulation implements Runnable {
     private final SimulationConfiguration config;
     private final GenotypeCreator genotypeCreator;
     private final PlantCreator plantCreator;
+    private List<SimulationProgressListener> progressListeners;
     private long time;
 
     private final AtomicBoolean running = new AtomicBoolean(true);
 
     public Simulation(SimulationConfiguration config) {
-        this(config, List.of());
+        this(config, List.of(), List.of());
     }
 
-    public Simulation(SimulationConfiguration config, List<MapChangeListener> map_observers) {
+    public Simulation(SimulationConfiguration config, List<MapChangeListener> map_observers, List<SimulationProgressListener> simulationListeners) {
         this.config = config;
         var mapBoundary = new Boundary(new Vector2d(0, 0), config.getMapSize());
         map = new WorldMap(mapBoundary);
         animals = new ArrayList<>();
 
         map_observers.forEach(ob -> map.addObserver(ob));
+        this.progressListeners = simulationListeners;
 
         genotypeCreator = switch (config.getMutationMode()) {
             case MutationMode.FULL_RANDOM -> new GenotypeCreatorFullRandom(config.getGenomeLength());
@@ -78,7 +80,11 @@ public class Simulation implements Runnable {
         reproduceAnimals();
         growPlants();
         time++;
-        map.print();
+        progressListeners.forEach(SimulationProgressListener::afterAdvance);
+    }
+
+    public WorldMap getMap() {
+        return map;
     }
 
     private void removeDeadAnimals() {

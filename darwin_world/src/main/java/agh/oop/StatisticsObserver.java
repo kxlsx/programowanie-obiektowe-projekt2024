@@ -2,8 +2,10 @@ package agh.oop;
 
 import agh.oop.model.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class StatisticsObserver implements MapChangeListener {
     private final Set<Animal> aliveAnimals;

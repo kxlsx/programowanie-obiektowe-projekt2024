@@ -225,4 +225,20 @@ public class WorldMap implements MoveValidator{
         System.out.println();
 
     }
+
+    public List<WorldElement> worldElementsAt(Vector2d position) {
+        ArrayList<WorldElement> list;
+        if(animalsAt(position) != null) {
+            list = new ArrayList<>(animalsAt(position));
+        }
+        else {
+            list = new ArrayList<>();
+        }
+
+
+        if(plantAt(position) != null) {
+            list.addFirst(plantAt(position));
+        }
+        return list;
+    }
 }

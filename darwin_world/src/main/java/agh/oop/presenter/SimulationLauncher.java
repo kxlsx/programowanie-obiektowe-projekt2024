@@ -1,5 +1,6 @@
 package agh.oop.presenter;
 
+import agh.oop.Simulation;
 import agh.oop.SimulationConfiguration;
 import agh.oop.model.MapType;
 import agh.oop.model.MutationMode;
@@ -14,6 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.List;
 import java.util.Optional;
 
 public class SimulationLauncher {
@@ -60,7 +62,7 @@ public class SimulationLauncher {
             MutationMode.FULL_RANDOM);
     }
 
-    public void onSimulationStartClicked(ActionEvent actionEvent) {
+    public void handleRun() {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         try {
@@ -71,17 +73,15 @@ public class SimulationLauncher {
         catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        SimulationPresenter presenter = loader.getController();
-        //initPresenter(presenter);
+        SimulationPresenter presenter = loader.getController();
+        initPresenter(presenter);
     }
 
-    private void initPresenter(/*SimulationPresenter presenter*/) {
-//        GrassField map = new GrassField(5);
-//        presenter.setWorldMap(map);
-//        map.addListener(presenter);
-//        List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
-//        List<MoveDirection> directions = OptionsParser.parse(List.of(movesInput.getText().split(" ")));
-//        engine.addAndRunAsync(new Simulation(positions, directions, map));
+    private void initPresenter(SimulationPresenter presenter) {
+        var simulation = new Simulation(configuration, List.of(), List.of(presenter));
+        presenter.setWorldMap(simulation.getMap());
+        var thread = new Thread(simulation);
+        thread.start();
     }
 
     public void init() {
@@ -229,7 +229,4 @@ public class SimulationLauncher {
         loadUiFromConfiguration();
     }
 
-    public void handleRun(ActionEvent actionEvent) {
-        
-    }
 }

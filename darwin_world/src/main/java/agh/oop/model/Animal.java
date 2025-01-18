@@ -1,5 +1,7 @@
 package agh.oop.model;
 
+import javafx.scene.paint.Color;
+
 import java.util.*;
 
 /**
@@ -171,5 +173,10 @@ public class Animal implements WorldElement {
             }
         }
         return descCount;
+    }
+
+    @Override
+    public Shape getShape() {
+        return new Shape(Color.rgb(200, 100, 100), ShapeType.CIRCLE, Math.clamp(energy / 10., 0., 1.));
     }
 }
