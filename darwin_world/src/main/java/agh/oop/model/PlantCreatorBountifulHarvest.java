@@ -12,6 +12,7 @@ public class PlantCreatorBountifulHarvest implements PlantCreator {
 
     @Override
     public void createPlants(WorldMap worldMap) {
+        // TODO: split stuff to other functions so it can be tested
         for(int x = worldMap.getBounds().getLowerLeft().getX(); x < worldMap.getBounds().getUpperRight().getX(); x++) {
             for(int y = worldMap.getBounds().getLowerLeft().getY(); y < worldMap.getBounds().getUpperRight().getY(); y++) {
                 if(Math.random() <= plantGrowthProbability && worldMap.plantAt(new Vector2d(x, y)) != null) {

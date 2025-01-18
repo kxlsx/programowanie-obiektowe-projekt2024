@@ -18,6 +18,7 @@ public class PlantCreatorEquator implements PlantCreator {
 
     @Override
     public void createPlants(WorldMap worldMap) {
+        // TODO: split stuff to other functions so it can be tested, and fix it
         for(int x = 0; x < mapRegion.width(); x++) {
             for(int y = 0; y < mapRegion.height(); y++) {
                 double probability = 0.0;

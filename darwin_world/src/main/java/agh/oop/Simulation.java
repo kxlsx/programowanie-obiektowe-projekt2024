@@ -117,6 +117,7 @@ public class Simulation implements Runnable {
     }
 
     private void reproduceAnimals() {
+        // TODO: split stuff to other functions so it can be tested
         Random rand = new Random();
         var positions = map.getAnimalsPositions();
         for (var position : positions) {
