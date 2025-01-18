@@ -21,22 +21,22 @@ public class Simulation implements Runnable {
 
     public Simulation(SimulationConfiguration config, List<MapChangeListener> map_observers) {
         this.config = config;
-        var mapBoundary = new Boundary(new Vector2d(0, 0), config.mapSize());
+        var mapBoundary = new Boundary(new Vector2d(0, 0), config.getMapSize());
         map = new WorldMap(mapBoundary);
         animals = new ArrayList<>();
 
         map_observers.forEach(ob -> map.addObserver(ob));
 
-        genotypeCreator = switch (config.mutationMode()) {
-            case MutationMode.FULL_RANDOM -> new GenotypeCreatorFullRandom(config.genomeLength());
-            case MutationMode.INCREMENTAL -> new GenotypeCreatorIncremental(config.genomeLength());
+        genotypeCreator = switch (config.getMutationMode()) {
+            case MutationMode.FULL_RANDOM -> new GenotypeCreatorFullRandom(config.getGenomeLength());
+            case MutationMode.INCREMENTAL -> new GenotypeCreatorIncremental(config.getGenomeLength());
         };
 
-        plantCreator = switch (config.plantGrowthMode()) {
-            case PlantGrowthMode.EQUATOR -> new PlantCreatorEquator(config.plantGrowthPerDay(), mapBoundary);
+        plantCreator = switch (config.getPlantGrowthMode()) {
+            case PlantGrowthMode.EQUATOR -> new PlantCreatorEquator(config.getPlantGrowthPerDay(), mapBoundary);
             case PlantGrowthMode.BOUNTIFUL_HARVEST ->
                     new PlantCreatorBountifulHarvest(
-                            config.plantGrowthPerDay(),
+                            config.getPlantGrowthPerDay(),
                             new Boundary(new Vector2d(0, 0), new Vector2d(3, 3)), // TODO
                             mapBoundary
                     );
@@ -45,8 +45,8 @@ public class Simulation implements Runnable {
         time = 0;
 
         // create initial animals
-        for(int i = 0; i < config.initialNumberOfAnimals(); i++) {
-            var animal = new Animal(new Vector2d(0, 0), MapDirection.createRandomMapDirection(), genotypeCreator.create(), config.initialAnimalEnergy(), time); // TODO random position
+        for(int i = 0; i < config.getInitialNumberOfAnimals(); i++) {
+            var animal = new Animal(new Vector2d(0, 0), MapDirection.createRandomMapDirection(), genotypeCreator.create(), config.getInitialAnimalEnergy(), time); // TODO random position
             animals.add(animal);
             map.addAnimal(animal);
         }
@@ -111,16 +111,16 @@ public class Simulation implements Runnable {
 
         for(var plant : animalsPerPlant.keySet()) {
             var strongest = getStrongest(animalsPerPlant.get(plant));
-            strongest.getLast().addEnergy(plant.getEnergyMultiplier() * config.energyFromPlant());
+            strongest.getLast().addEnergy(plant.getEnergyMultiplier() * config.getEnergyFromPlant());
             map.removePlant(plant);
         }
     }
 
     private Animal reproduce(Animal parent1, Animal parent2) {
         var genotype = genotypeCreator.mixAnimals(parent1, parent2);
-        parent1.loseEnergy(config.reproductionCost());
-        parent2.loseEnergy(config.reproductionCost());
-        var child = new Animal(parent1.getPosition(), MapDirection.createRandomMapDirection(), genotype, config.reproductionCost() * 2, time);
+        parent1.loseEnergy(config.getReproductionCost());
+        parent2.loseEnergy(config.getReproductionCost());
+        var child = new Animal(parent1.getPosition(), MapDirection.createRandomMapDirection(), genotype, config.getReproductionCost() * 2, time);
         parent1.addChild(child);
         parent2.addChild(child);
         return child;
@@ -135,7 +135,7 @@ public class Simulation implements Runnable {
             var strongest = getStrongest(map.animalsAt(position));
             var parent1 = strongest.getLast();
             var parent2 = strongest.get(strongest.size() - 2);
-            if(parent2.getEnergy() < config.reproductionEnergyThreshold()) {
+            if(parent2.getEnergy() < config.getReproductionEnergyThreshold()) {
                 continue;
             }
 

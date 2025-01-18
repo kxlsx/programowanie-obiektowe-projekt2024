@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="agh.oop.presenter.SimulationLauncher">
+<children>
+    <Text text="Simulation Configuration" layoutX="14.0" layoutY="14.0" />
+
+    <Label text="Map Size (x, y):" layoutX="14.0" layoutY="50.0" />
+    <TextField fx:id="mapSizeXField" layoutX="120.0" layoutY="45.0" promptText="Width" />
+    <TextField fx:id="mapSizeYField" layoutX="200.0" layoutY="45.0" promptText="Height" />
+
+    <Label text="Initial Number of Plants:" layoutX="14.0" layoutY="80.0" />
+    <Slider fx:id="initialNumberOfPlantsSlider" layoutX="200.0" layoutY="75.0" min="0" max="100" />
+    <Label fx:id="initialNumberOfPlantsLabel" layoutX="320.0" layoutY="80.0" text="0" />
+
+    <Label text="Energy from Plant:" layoutX="14.0" layoutY="110.0" />
+    <Slider fx:id="energyFromPlantSlider" layoutX="200.0" layoutY="105.0" min="0" max="100" />
+    <Label fx:id="energyFromPlantLabel" layoutX="320.0" layoutY="110.0" text="0" />
+
+    <Label text="Plant Growth Per Day:" layoutX="14.0" layoutY="140.0" />
+    <Slider fx:id="plantGrowthPerDaySlider" layoutX="200.0" layoutY="135.0" min="0" max="100" />
+    <Label fx:id="plantGrowthPerDayLabel" layoutX="320.0" layoutY="140.0" text="0" />
+
+    <Label text="Initial Number of Animals:" layoutX="14.0" layoutY="170.0" />
+    <Slider fx:id="initialNumberOfAnimalsSlider" layoutX="200.0" layoutY="165.0" min="0" max="100" />
+    <Label fx:id="initialNumberOfAnimalsLabel" layoutX="320.0" layoutY="170.0" text="0" />
+
+    <Button text="Submit" layoutX="14.0" layoutY="210.0" onAction="#handleSubmit" />
+</children>
+</AnchorPane>
