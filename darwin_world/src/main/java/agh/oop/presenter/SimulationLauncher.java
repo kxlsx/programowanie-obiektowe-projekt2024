@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class SimulationLauncher {
-    public TextField movesInput;
-    public Button start;
     public TextField mapSizeXField;
     public TextField mapSizeYField;
     public Slider initialNumberOfPlantsSlider;
@@ -43,7 +41,6 @@ public class SimulationLauncher {
     public ChoiceBox<String> plantGrowthModeChoiceBox;
     public ChoiceBox<String> mutationModeChoiceBox;
     private SimulationConfiguration configuration;
-//    private final SimulationsEngine engine = new SimulationsEngine();
 
     public SimulationLauncher() {
         Vector2d mapSize = new Vector2d(10, 10);
@@ -79,7 +76,7 @@ public class SimulationLauncher {
 
     private void initPresenter(SimulationPresenter presenter) {
         var simulation = new Simulation(configuration, List.of(), List.of(presenter));
-        presenter.setWorldMap(simulation.getMap());
+        presenter.initialize(simulation);
         var thread = new Thread(simulation);
         thread.start();
     }
@@ -122,6 +119,10 @@ public class SimulationLauncher {
         reproductionEnergyThresholdSlider.valueProperty().addListener((observable, oldValue, newValue) -> onSliderMoved("reproductionEnergyThreshold", newValue.intValue()));
         reproductionCostSlider.valueProperty().addListener((observable, oldValue, newValue) -> onSliderMoved("reproductionCost", newValue.intValue()));
         genomeLengthSlider.valueProperty().addListener((observable, oldValue, newValue) -> onSliderMoved("genomeLength", newValue.intValue()));
+
+        // choice boxes
+        plantGrowthModeChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> onGrowthModeChanged(newValue));
+        mutationModeChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> onMutationModeChanged(newValue));
     }
 
     private static Optional<Integer> getIntegerIfValid(String value) {
@@ -129,6 +130,20 @@ public class SimulationLauncher {
             return Optional.of(Integer.parseInt(value));
         } catch (NumberFormatException e) {
             return Optional.empty();
+        }
+    }
+
+    private void onGrowthModeChanged(String mode) {
+        var growthMode = PlantGrowthMode.fromString(mode);
+        if(growthMode != null) {
+            configuration.setPlantGrowthMode(growthMode);
+        }
+    }
+
+    private void onMutationModeChanged(String mode) {
+        var mutationMode = MutationMode.fromString(mode);
+        if(mutationMode != null) {
+            configuration.setMutationMode(mutationMode);
         }
     }
 

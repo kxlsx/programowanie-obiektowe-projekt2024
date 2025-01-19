@@ -1,11 +1,11 @@
 package agh.oop.presenter;
 
 
+import agh.oop.Simulation;
 import agh.oop.model.Shape;
 import agh.oop.model.SimulationProgressListener;
-import agh.oop.model.WorldMap;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
+import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -15,18 +15,19 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class SimulationPresenter implements SimulationProgressListener {
-    @FXML
     public GridPane mapGrid;
-    private WorldMap map;
+    private Simulation simulation;
 
-    public void setWorldMap(WorldMap map) {
-        this.map = map;
+    public void initialize(Simulation simulation) {
+        this.simulation = simulation;
     }
 
     public void drawMap() {
         clearGrid();
         final int CELL_WIDTH = 50;
         final int CELL_HEIGHT = 50;
+
+        var map = simulation.getMap();
 
         int columns = map.getBounds().width();
         int rows = map.getBounds().height();
@@ -80,5 +81,13 @@ public class SimulationPresenter implements SimulationProgressListener {
     @Override
     public void afterAdvance() {
         Platform.runLater(this::drawMap);
+    }
+
+    public void onPause(ActionEvent actionEvent) {
+        simulation.pause();
+    }
+
+    public void onUnpause(ActionEvent actionEvent) {
+        simulation.unpause();
     }
 }

@@ -126,6 +126,15 @@ public class WorldMap implements MoveValidator{
         addAnimal(animal);
     }
 
+    public boolean plantExists(Boundary bound) {
+        for(var position : bound.containedVectors()) {
+            if(plants.containsKey(position)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @param position position to check.
      * @return the Plant at position or null there's no Plant there.

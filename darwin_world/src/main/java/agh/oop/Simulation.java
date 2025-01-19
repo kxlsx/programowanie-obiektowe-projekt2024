@@ -11,10 +11,11 @@ public class Simulation implements Runnable {
     private final SimulationConfiguration config;
     private final GenotypeCreator genotypeCreator;
     private final PlantCreator plantCreator;
-    private List<SimulationProgressListener> progressListeners;
+    private final List<SimulationProgressListener> progressListeners;
     private long time;
 
     private final AtomicBoolean running = new AtomicBoolean(true);
+    private final AtomicBoolean paused = new AtomicBoolean(false);
 
     public Simulation(SimulationConfiguration config) {
         this(config, List.of(), List.of());
@@ -26,7 +27,7 @@ public class Simulation implements Runnable {
         map = new WorldMap(mapBoundary);
         animals = new ArrayList<>();
 
-        map_observers.forEach(ob -> map.addObserver(ob));
+        map_observers.forEach(map::addObserver);
         this.progressListeners = simulationListeners;
 
         genotypeCreator = switch (config.getMutationMode()) {
@@ -59,18 +60,35 @@ public class Simulation implements Runnable {
 
     public void stop() {
         running.set(false);
+        paused.set(false);
     }
 
     @Override
     public void run() {
         while (running.get()) {
-            advance();
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 System.out.println("Simulation interrupted");
             }
+
+            while(paused.get()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException _) {
+                }
+            }
+
+            advance();
         }
+    }
+
+    public void pause() {
+        paused.set(true);
+    }
+
+    public void unpause() {
+        paused.set(false);
     }
 
     public void advance() {
