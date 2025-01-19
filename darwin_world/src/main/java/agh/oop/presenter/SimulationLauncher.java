@@ -65,8 +65,8 @@ public class SimulationLauncher {
     public void handleRun() {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
+        Stage stage = new Stage();
         try {
-            Stage stage = new Stage();
             BorderPane viewRoot = loader.load();
             configureStage(stage, viewRoot);
         }
@@ -74,11 +74,12 @@ public class SimulationLauncher {
             throw new RuntimeException(e);
         }
         SimulationPresenter presenter = loader.getController();
-        initPresenter(presenter);
+        initPresenter(presenter, stage);
     }
 
-    private void initPresenter(SimulationPresenter presenter) {
+    private void initPresenter(SimulationPresenter presenter, Stage stage) {
         var simulation = SimulationFactory.createFromConfig(configuration, List.of(), List.of(presenter));
+        stage.setOnCloseRequest(event -> simulation.stop());
         presenter.initialize(simulation);
         var thread = new Thread(simulation);
         thread.start();

@@ -82,6 +82,7 @@ public class Simulation implements Runnable {
 
             advance();
         }
+        System.out.println("Simulation stopped");
     }
 
     public void pause() {
