@@ -27,6 +27,19 @@ public class Simulation implements Runnable {
     private final AtomicBoolean running = new AtomicBoolean(true);
     private final AtomicBoolean paused = new AtomicBoolean(false);
 
+    /**
+     * Create Simulation wit hpassed parameters.
+     *
+     * @param map simulation map object.
+     * @param animals list of animals(TODO).
+     * @param animalComparator used to compare animals that fight for food or to reproduce.
+     * @param animalCreator object used for reproduction and creation of animals.
+     * @param plantCreator used for creating new animals.
+     * @param energyFromPlant how much energy animal gains from eating plant.
+     * @param reproductionEnergyThreshold required energy for reproduction.
+     * @param initialNumberOfAnimals how many animals to create initially.
+     * @param initialNumberOfPlants how many plants to create initially.
+     */
     public Simulation(
             WorldMap map,
             List<Animal> animals,
@@ -59,11 +72,17 @@ public class Simulation implements Runnable {
         plantCreator.createPlants(map); // TODO use initial number of plants
     }
 
+    /**
+     * stops simulation
+     */
     public void stop() {
         paused.set(false);
         running.set(false);
     }
 
+    /**
+     * starts simulation and advances it till stop is called.
+     */
     @Override
     public void run() {
         while (running.get()) {
@@ -85,14 +104,25 @@ public class Simulation implements Runnable {
         System.out.println("Simulation stopped");
     }
 
+    /**
+     * Pauses simulation.
+     */
     public void pause() {
         paused.set(true);
     }
 
+
+    /**
+     * Unpauses simulation.
+     */
     public void unpause() {
         paused.set(false);
     }
 
+
+    /**
+     * Performs one cycle/frame of simulation.
+     */
     public void advance() {
         removeDeadAnimals();
         moveAnimals();
@@ -103,10 +133,19 @@ public class Simulation implements Runnable {
         progressListeners.forEach(SimulationProgressListener::afterAdvance);
     }
 
+    /**
+     *
+     * @return simulation's WorldMap object.
+     */
     public WorldMap getMap() {
         return map;
     }
 
+    /**
+     * Adds listener that gets notified every time advance finishes.
+     *
+     * @param listener new listener to add
+     */
     public void addSimulationProgressListener(SimulationProgressListener listener) {
         progressListeners.add(listener);
     }
