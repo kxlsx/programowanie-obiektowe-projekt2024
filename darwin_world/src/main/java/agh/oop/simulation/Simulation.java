@@ -1,13 +1,16 @@
 package agh.oop.simulation;
 
-import agh.oop.model.animal.*;
-import agh.oop.simulation.config.MutationMode;
-import agh.oop.simulation.config.PlantGrowthMode;
-import agh.oop.simulation.config.SimulationConfiguration;
-import agh.oop.model.*;
-import agh.oop.model.plant.*;
+import agh.oop.model.SimulationProgressListener;
+import agh.oop.model.WorldMap;
+import agh.oop.model.animal.Animal;
+import agh.oop.model.animal.AnimalComparator;
+import agh.oop.model.animal.AnimalCreator;
+import agh.oop.model.plant.Plant;
+import agh.oop.model.plant.PlantCreator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Simulation implements Runnable {
@@ -19,8 +22,10 @@ public class Simulation implements Runnable {
     private final int energyFromPlant;
     private final int reproductionEnergyThreshold;
     private long time;
+    private final ArrayList<SimulationProgressListener> progressListeners = new ArrayList<>();
 
     private final AtomicBoolean running = new AtomicBoolean(true);
+    private final AtomicBoolean paused = new AtomicBoolean(false);
 
     public Simulation(
             WorldMap map,
@@ -55,19 +60,36 @@ public class Simulation implements Runnable {
     }
 
     public void stop() {
+        paused.set(false);
         running.set(false);
     }
 
     @Override
     public void run() {
         while (running.get()) {
-            advance();
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 System.out.println("Simulation interrupted");
             }
+
+            while(paused.get()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException _) {
+                }
+            }
+
+            advance();
         }
+    }
+
+    public void pause() {
+        paused.set(true);
+    }
+
+    public void unpause() {
+        paused.set(false);
     }
 
     public void advance() {
@@ -77,7 +99,15 @@ public class Simulation implements Runnable {
         reproduceAnimals();
         growPlants();
         time++;
-        map.print();
+        progressListeners.forEach(SimulationProgressListener::afterAdvance);
+    }
+
+    public WorldMap getMap() {
+        return map;
+    }
+
+    public void addSimulationProgressListener(SimulationProgressListener listener) {
+        progressListeners.add(listener);
     }
 
     private void removeDeadAnimals() {

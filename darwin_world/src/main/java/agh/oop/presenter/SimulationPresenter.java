@@ -1,9 +1,9 @@
 package agh.oop.presenter;
 
 
-import agh.oop.Simulation;
 import agh.oop.model.Shape;
 import agh.oop.model.SimulationProgressListener;
+import agh.oop.simulation.Simulation;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;

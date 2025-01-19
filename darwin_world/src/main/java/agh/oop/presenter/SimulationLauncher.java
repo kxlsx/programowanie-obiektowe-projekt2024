@@ -1,15 +1,18 @@
 package agh.oop.presenter;
 
-import agh.oop.Simulation;
-import agh.oop.SimulationConfiguration;
-import agh.oop.model.MapType;
-import agh.oop.model.MutationMode;
-import agh.oop.model.PlantGrowthMode;
 import agh.oop.model.Vector2d;
+import agh.oop.simulation.SimulationFactory;
+import agh.oop.simulation.config.MapType;
+import agh.oop.simulation.config.MutationMode;
+import agh.oop.simulation.config.PlantGrowthMode;
+import agh.oop.simulation.config.SimulationConfiguration;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -75,7 +78,7 @@ public class SimulationLauncher {
     }
 
     private void initPresenter(SimulationPresenter presenter) {
-        var simulation = new Simulation(configuration, List.of(), List.of(presenter));
+        var simulation = SimulationFactory.createFromConfig(configuration, List.of(), List.of(presenter));
         presenter.initialize(simulation);
         var thread = new Thread(simulation);
         thread.start();
