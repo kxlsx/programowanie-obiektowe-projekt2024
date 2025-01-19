@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Simulation implements Runnable {
     private final WorldMap map;
     private final List<Animal> animals;
+    private final AnimalComparator animalComparator;
     private final AnimalCreator animalCreator;
     private final PlantCreator plantCreator;
     private final int energyFromPlant;
@@ -24,6 +25,7 @@ public class Simulation implements Runnable {
     public Simulation(
             WorldMap map,
             List<Animal> animals,
+            AnimalComparator animalComparator,
             AnimalCreator animalCreator,
             PlantCreator plantCreator,
             int energyFromPlant,
@@ -33,6 +35,7 @@ public class Simulation implements Runnable {
     ){
         this.map = map;
         this.animals = animals;
+        this.animalComparator = animalComparator;
         this.animalCreator = animalCreator;
         this.plantCreator = plantCreator;
         this.energyFromPlant = energyFromPlant;
@@ -106,7 +109,7 @@ public class Simulation implements Runnable {
         }
 
         for (var plant : animalsPerPlant.keySet()) {
-            var strongest = getStrongest(animalsPerPlant.get(plant));
+            var strongest = animalComparator.getStrongest(animalsPerPlant.get(plant));
             strongest.getLast().addEnergy(plant.getEnergyMultiplier() * energyFromPlant);
             map.removePlant(plant);
         }
@@ -118,7 +121,7 @@ public class Simulation implements Runnable {
             if(map.animalsAt(position).size() < 2) {
                 continue;
             }
-            var strongest = getStrongest(map.animalsAt(position));
+            var strongest = animalComparator.getStrongest(map.animalsAt(position));
             var parent1 = strongest.getLast();
             var parent2 = strongest.get(strongest.size() - 2);
             if(parent2.getEnergy() < reproductionEnergyThreshold) {
@@ -134,24 +137,4 @@ public class Simulation implements Runnable {
     private void growPlants() {
         plantCreator.createPlants(map);
     }
-
-    private static Comparator<Animal> getAnimalComparator() {
-        return Comparator.comparing(Animal::getEnergy).thenComparing((Animal a) -> -a.getBirthDate()).thenComparing(Animal::countDescendants);
-    }
-
-    private ArrayList<Animal> getStrongest(Collection<Animal> candidates) {
-        ArrayList<Animal> strongest = new ArrayList<Animal>(candidates);
-        strongest.sort(getAnimalComparator());
-        int first = 0;
-        var cmp = getAnimalComparator();
-        for(int i = 1; i < strongest.size(); i++) {
-            if(cmp.compare(strongest.get(i), strongest.get(i - 1)) != 0) {
-                Collections.shuffle(strongest.subList(first, i));
-                first = i;
-            }
-        }
-        Collections.shuffle(strongest.subList(first, strongest.size()));
-        return strongest;
-    }
-
 }
