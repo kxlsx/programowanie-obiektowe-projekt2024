@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import java.lang.String?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="agh.oop.presenter.SimulationLauncher">
+    <children>
+        <VBox spacing="15.0" AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0"
+              AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0">
+            <Text text="Simulation Configuration" style="-fx-font-size: 20;" />
+
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="40" />
+                    <ColumnConstraints percentWidth="30" />
+                    <ColumnConstraints percentWidth="30" />
+                </columnConstraints>
+
+                <!-- Map Size -->
+                <Label text="Map Size (x, y):" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="mapSizeXField" promptText="Width" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField fx:id="mapSizeYField" promptText="Height" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+
+                <!-- Initial Number of Plants -->
+                <Label text="Initial Number of Plants:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Slider fx:id="initialNumberOfPlantsSlider" min="0" max="100" GridPane.columnIndex="1" GridPane.rowIndex="1" HBox.hgrow="ALWAYS" />
+                <Label fx:id="initialNumberOfPlantsLabel" text="0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+
+                <!-- Energy from Plant -->
+                <Label text="Energy from Plant:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Slider fx:id="energyFromPlantSlider" min="0" max="100" GridPane.columnIndex="1" GridPane.rowIndex="2" HBox.hgrow="ALWAYS" />
+                <Label fx:id="energyFromPlantLabel" text="0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+                <!-- Plant Growth Per Day -->
+                <Label text="Plant Growth Per Day:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <Slider fx:id="plantGrowthPerDaySlider" min="0" max="100" GridPane.columnIndex="1" GridPane.rowIndex="3" HBox.hgrow="ALWAYS" />
+                <Label fx:id="plantGrowthPerDayLabel" text="0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+
+                <!-- Initial Number of Animals -->
+                <Label text="Initial Number of Animals:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <Slider fx:id="initialNumberOfAnimalsSlider" min="0" max="100" GridPane.columnIndex="1" GridPane.rowIndex="4" HBox.hgrow="ALWAYS" />
+                <Label fx:id="initialNumberOfAnimalsLabel" text="0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+
+                <!-- Initial Animal Energy -->
+                <Label text="Initial Animal Energy:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                <Slider fx:id="initiaAnimalEnergySlider" min="0" max="100" GridPane.columnIndex="1" GridPane.rowIndex="5" HBox.hgrow="ALWAYS" />
+                <Label fx:id="initiaAnimalEnergyLabel" text="0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+
+                <!-- Reproduction Energy Threshold -->
+                <Label text="Reproduction Energy Threshold:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                <Slider fx:id="reproductionEnergyThresholdSlider" min="0" max="100" GridPane.columnIndex="1" GridPane.rowIndex="6" HBox.hgrow="ALWAYS" />
+                <Label fx:id="reproductionEnergyThresholdLabel" text="0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+
+                <!-- Reproduction Cost -->
+                <Label text="Reproduction Cost:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                <Slider fx:id="reproductionCostSlider" min="0" max="100" GridPane.columnIndex="1" GridPane.rowIndex="7" HBox.hgrow="ALWAYS" />
+                <Label fx:id="reproductionCostLabel" text="0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+
+                <!-- Genome Length -->
+                <Label text="Genome Length:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                <Slider fx:id="genomeLengthSlider" min="0" max="100" GridPane.columnIndex="1" GridPane.rowIndex="8" HBox.hgrow="ALWAYS" />
+                <Label fx:id="genomeLengthLabel" text="0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+
+                <!-- Map Type -->
+                <Label text="Select Map Type:" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                <ChoiceBox fx:id="mapTypeChoiceBox" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Normal" />
+                        </FXCollections>
+                    </items>
+                    <value>Forest</value>
+                </ChoiceBox>
+
+                <!-- Plant Growth Mode -->
+                <Label text="Select Plant Growth Mode:" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+                <ChoiceBox fx:id="plantGrowthModeChoiceBox" GridPane.columnIndex="1" GridPane.rowIndex="10">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="BOUNTIFUL_HARVEST" />
+                            <String fx:value="EQUATOR" />
+                        </FXCollections>
+                    </items>
+                    <value>Forest</value>
+                </ChoiceBox>
+
+                <!-- Plant Growth Mode -->
+                <Label text="Select Mutation Mode:" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+                <ChoiceBox fx:id="mutationModeChoiceBox" GridPane.columnIndex="1" GridPane.rowIndex="11">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="FULL_RANDOM" />
+                            <String fx:value="INCREMENTAL" />
+                        </FXCollections>
+                    </items>
+                    <value>Forest</value>
+                </ChoiceBox>
+
+            </GridPane>
+
+            <!-- Submit Button -->
+            <Button text="Save" onAction="#saveConfiguration" />
+            <!-- Submit Button -->
+            <Button text="Load" onAction="#loadConfiguration" />
+            <!-- Submit Button -->
+            <Button text="Run" onAction="#handleRun" />
+        </VBox>
+    </children>
+</AnchorPane>

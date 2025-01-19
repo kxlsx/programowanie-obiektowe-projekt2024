@@ -10,11 +10,15 @@ import agh.oop.simulation.Simulation;
 import agh.oop.simulation.StatisticsObserver;
 
 import java.util.List;
+import javafx.application.Application;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
+        Application.launch(SimulationApp.class, args);
+        /*
+
         Vector2d mapSize = new Vector2d(10, 10);
         SimulationConfiguration config = new SimulationConfiguration(
                 mapSize,
@@ -45,5 +49,6 @@ public class Main {
                 System.out.println("Simulation interrupted");
             }
         }
+         */
     }
 }

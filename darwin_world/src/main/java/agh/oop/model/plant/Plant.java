@@ -1,8 +1,7 @@
 package agh.oop.model.plant;
 
-import agh.oop.model.Boundary;
-import agh.oop.model.Vector2d;
-import agh.oop.model.WorldElement;
+import agh.oop.model.*;
+import javafx.scene.paint.Color;
 
 public class Plant implements WorldElement {
     private final int energy;
@@ -21,4 +20,9 @@ public class Plant implements WorldElement {
         return energy;
     }
     public Boundary getBounds() { return bounds; }
+
+    @Override
+    public Shape getShape() {
+        return new Shape((bounds.area() > 1 ? Color.DARKGREEN : Color.LIGHTGREEN), ShapeType.SQUARE, 1.);
+    }
 }

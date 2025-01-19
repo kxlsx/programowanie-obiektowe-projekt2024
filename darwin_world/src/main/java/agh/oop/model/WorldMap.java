@@ -128,6 +128,15 @@ public class WorldMap implements MoveValidator{
         addAnimal(animal);
     }
 
+    public boolean plantExists(Boundary bound) {
+        for(var position : bound.containedVectors()) {
+            if(plants.containsKey(position)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @param position position to check.
      * @return the Plant at position or null there's no Plant there.
@@ -226,5 +235,21 @@ public class WorldMap implements MoveValidator{
         System.out.println();
         System.out.println();
 
+    }
+
+    public List<WorldElement> worldElementsAt(Vector2d position) {
+        ArrayList<WorldElement> list;
+        if(animalsAt(position) != null) {
+            list = new ArrayList<>(animalsAt(position));
+        }
+        else {
+            list = new ArrayList<>();
+        }
+
+
+        if(plantAt(position) != null) {
+            list.addFirst(plantAt(position));
+        }
+        return list;
     }
 }

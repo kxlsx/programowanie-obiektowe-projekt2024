@@ -1,11 +1,12 @@
 package agh.oop.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Object representing a vector in Z^2.
  */
-public class Vector2d {
+public class Vector2d implements Serializable {
     private final int x;
     private final int y;
 

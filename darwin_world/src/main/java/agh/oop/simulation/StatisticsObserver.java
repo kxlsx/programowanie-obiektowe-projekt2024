@@ -3,8 +3,8 @@ package agh.oop.simulation;
 import agh.oop.model.*;
 import agh.oop.model.animal.Animal;
 import agh.oop.model.plant.Plant;
-
 import java.util.*;
+
 
 public class StatisticsObserver implements MapChangeListener {
     private final Set<Animal> aliveAnimals;
