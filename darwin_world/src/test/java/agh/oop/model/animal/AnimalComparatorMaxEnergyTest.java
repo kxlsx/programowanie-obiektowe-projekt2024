@@ -30,7 +30,7 @@ public class AnimalComparatorMaxEnergyTest {
     }
 
     @Test
-    public void getStrongestAll() {
+    public void sortContains() {
         AnimalComparator cmp = new AnimalComparatorMaxEnergy();
         AnimalCreator animalCreator =  new AnimalCreatorNormal(new GenotypeCreatorIncremental(10), 10, 10);
         ArrayList<Animal> animals = new ArrayList<>();
@@ -38,12 +38,12 @@ public class AnimalComparatorMaxEnergyTest {
             animals.add(animalCreator.create(i));
         }
 
-        HashSet<Animal> strongest = new HashSet<>(cmp.getStrongest(animals));
+        HashSet<Animal> strongest = new HashSet<>(cmp.sort(animals));
         assertTrue(strongest.containsAll(animals));
     }
 
     @Test
-    public void getStrongestOne() {
+    public void sortOneGreatest() {
         AnimalComparator cmp = new AnimalComparatorMaxEnergy();
         AnimalCreator animalCreator =  new AnimalCreatorNormal(new GenotypeCreatorIncremental(10), 10, 10);
         ArrayList<Animal> animals = new ArrayList<>();
@@ -53,8 +53,6 @@ public class AnimalComparatorMaxEnergyTest {
 
         Animal a0 = animals.getFirst();
         a0.addEnergy(10);
-        HashSet<Animal> strongest1 = new HashSet<>(cmp.getStrongest(animals));
-        assertEquals(1, strongest1.size());
-        assertTrue(strongest1.contains(a0));
+        assertEquals(a0, cmp.sort(animals).getLast());
     }
 }

@@ -109,7 +109,7 @@ public class Simulation implements Runnable {
         }
 
         for (var plant : animalsPerPlant.keySet()) {
-            var strongest = animalComparator.getStrongest(animalsPerPlant.get(plant));
+            var strongest = animalComparator.sort(animalsPerPlant.get(plant));
             strongest.getLast().addEnergy(plant.getEnergyMultiplier() * energyFromPlant);
             map.removePlant(plant);
         }
@@ -121,7 +121,7 @@ public class Simulation implements Runnable {
             if(map.animalsAt(position).size() < 2) {
                 continue;
             }
-            var strongest = animalComparator.getStrongest(map.animalsAt(position));
+            var strongest = animalComparator.sort(map.animalsAt(position));
             var parent1 = strongest.getLast();
             var parent2 = strongest.get(strongest.size() - 2);
             if(parent2.getEnergy() < reproductionEnergyThreshold) {

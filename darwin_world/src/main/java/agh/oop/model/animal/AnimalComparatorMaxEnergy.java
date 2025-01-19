@@ -32,12 +32,12 @@ public class AnimalComparatorMaxEnergy implements AnimalComparator{
     }
 
     /**
-     * Get an Array of the maximal Animals in the passed
-     * collection.
+     * Sort the animals with the comparator.
+     * Permutes the animals with the same maximal value randomly.
      * @param candidates a collection of animals
-     * @return A list of Animals with (the same) the max energy value.
+     * @return A list of Animals sorted by their energy value (ascending)
      */
-    public ArrayList<Animal> getStrongest(Collection<Animal> candidates) {
+    public ArrayList<Animal> sort(Collection<Animal> candidates) {
         ArrayList<Animal> strongest = new ArrayList<Animal>(candidates);
         strongest.sort(cmp);
         int first = 0;

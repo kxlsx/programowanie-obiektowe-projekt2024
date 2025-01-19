@@ -9,5 +9,5 @@ import java.util.Comparator;
  */
 public interface AnimalComparator {
     int compare(Animal a1, Animal a2);
-    ArrayList<Animal> getStrongest(Collection<Animal> candidates);
+    ArrayList<Animal> sort(Collection<Animal> candidates);
 }
