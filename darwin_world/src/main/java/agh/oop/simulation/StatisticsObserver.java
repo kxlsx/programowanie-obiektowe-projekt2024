@@ -1,8 +1,11 @@
 package agh.oop.simulation;
 
-import agh.oop.model.*;
+import agh.oop.model.Boundary;
+import agh.oop.model.MapChangeListener;
+import agh.oop.model.Vector2d;
 import agh.oop.model.animal.Animal;
 import agh.oop.model.plant.Plant;
+
 import java.util.*;
 
 
@@ -12,8 +15,10 @@ public class StatisticsObserver implements MapChangeListener {
 
     private final Set<Plant> plants;
     private final Map<Vector2d, Integer> objectsOnCell;
+    private Animal trackedAnimal;
+    private final Boundary plantsPreferredRegion;
 
-    public StatisticsObserver(Boundary mapBounds) {
+    public StatisticsObserver(Boundary mapBounds, Boundary plantsPreferredRegion) {
         aliveAnimals = new HashSet<Animal>();
         deadAnimals = new HashSet<Animal>();
         plants = new HashSet<>();
@@ -23,10 +28,40 @@ public class StatisticsObserver implements MapChangeListener {
                 v -> objectsOnCell.put(v, 0)
         );
 
+        this.plantsPreferredRegion = plantsPreferredRegion;
+    }
+
+    public synchronized void setTrackedAnimal(Animal animal) {
+        trackedAnimal = animal;
+    }
+
+    public synchronized Collection<Vector2d> getMostPopularGenotypePositions() {
+        // TODO
+        return List.of();
+    }
+
+    public synchronized Boundary getPlantsPreferredRegion() {
+        return plantsPreferredRegion;
+    }
+
+    public synchronized AnimalFateStatistics getTrackedAnimalStatistics() {
+        if(trackedAnimal == null) {
+            return null;
+        }
+        return new AnimalFateStatistics(
+                trackedAnimal.getPosition().deepCopy(),
+                trackedAnimal.getGenes().deepCopy(),
+                trackedAnimal.getGenes().getNextValue(),
+                trackedAnimal.getEnergy(),
+                0, // TODO
+                trackedAnimal.getChildren().size(),
+                trackedAnimal.countDescendants(),
+                trackedAnimal.getBirthDate(),
+                0); // TODO
     }
 
     @Override
-    public void onAnimalAdd(Animal animal) {
+    public synchronized void onAnimalAdd(Animal animal) {
         if(deadAnimals.contains(animal)) {
             deadAnimals.remove(animal);
         }
@@ -37,7 +72,7 @@ public class StatisticsObserver implements MapChangeListener {
     }
 
     @Override
-    public void onAnimalRemove(Animal animal) {
+    public synchronized void onAnimalRemove(Animal animal) {
         aliveAnimals.remove(animal);
         deadAnimals.add(animal);
 
@@ -45,7 +80,7 @@ public class StatisticsObserver implements MapChangeListener {
     }
 
     @Override
-    public void onPlantAdd(Plant plant) {
+    public synchronized void onPlantAdd(Plant plant) {
         plants.add(plant);
 
         for(Vector2d pos : plant.getBounds().containedVectors()) {
@@ -54,7 +89,7 @@ public class StatisticsObserver implements MapChangeListener {
     }
 
     @Override
-    public void onPlantRemove(Plant plant) {
+    public synchronized void onPlantRemove(Plant plant) {
         plants.remove(plant);
 
         for(Vector2d pos : plant.getBounds().containedVectors()) {
@@ -71,19 +106,19 @@ public class StatisticsObserver implements MapChangeListener {
         objectsOnCell.merge(position, -1, (a, b) -> a + b);
     }
 
-    public int aliveAnimalCount() {
+    public synchronized int aliveAnimalCount() {
         return aliveAnimals.size();
     }
 
-    public int deadAnimalCount() {
+    public synchronized int deadAnimalCount() {
         return deadAnimals.size();
     }
 
-    public int plantCount() {
+    public synchronized int plantCount() {
         return plants.size();
     }
 
-    public double averageEnergy() {
+    public synchronized double averageEnergy() {
         double avg = 0;
         for(Animal a : aliveAnimals) {
             avg += a.getEnergy();
@@ -91,7 +126,7 @@ public class StatisticsObserver implements MapChangeListener {
         return avg / aliveAnimalCount();
     }
 
-    public double averageDeadLifespan() {
+    public synchronized double averageDeadLifespan() {
         double avg = 0;
         for(Animal a : deadAnimals) {
             avg += a.getBirthDate();
@@ -99,7 +134,7 @@ public class StatisticsObserver implements MapChangeListener {
         return avg / deadAnimalCount();
     }
 
-    public double averageAliveChildCount() {
+    public synchronized double averageAliveChildCount() {
         double avg = 0;
         for(Animal a : aliveAnimals) {
             avg += a.getChildren().size();
@@ -107,7 +142,7 @@ public class StatisticsObserver implements MapChangeListener {
         return avg / aliveAnimalCount();
     }
 
-    public int freeCellsCount() {
+    public synchronized int freeCellsCount() {
         int counter = 0;
         for(int c : objectsOnCell.values()) {
             if(c == 0) counter += 1;
@@ -116,7 +151,7 @@ public class StatisticsObserver implements MapChangeListener {
     }
 
     // FIXME: temporary hack, may be slow
-    public Animal animalWithMostDescendants() {
+    public synchronized Animal animalWithMostDescendants() {
         Optional<Animal> mx1 = aliveAnimals.stream().reduce(
                 (a, b) ->
                         (a.countDescendants() > b.countDescendants()) ? a : b

@@ -21,6 +21,10 @@ public class Boundary {
         this.upperRight = upperRight;
     }
 
+    public Boundary deepCopy() {
+        return new Boundary(lowerLeft.deepCopy(), upperRight.deepCopy());
+    }
+
     /**
      * @param point vector to check.
      * @return true if point is inside the boundary.

@@ -38,4 +38,9 @@ public class PlantCreatorEquator implements PlantCreator {
             }
         }
     }
+
+    @Override
+    public Boundary getPreferredRegion() {
+        return equator;
+    }
 }

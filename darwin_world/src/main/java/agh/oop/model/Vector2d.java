@@ -56,6 +56,10 @@ public class Vector2d implements Serializable {
         return new Vector2d(-this.x, -this.y);
     }
 
+    public Vector2d deepCopy() {
+        return new Vector2d(x, y);
+    }
+
     @Override
     public boolean equals(Object other){
         if (this == other)
