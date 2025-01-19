@@ -1,9 +1,10 @@
-package agh.oop;
+package agh.oop.simulation;
 
 import agh.oop.model.*;
+import agh.oop.model.animal.Animal;
+import agh.oop.model.plant.Plant;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class StatisticsObserver implements MapChangeListener {
     private final Set<Animal> aliveAnimals;
@@ -61,6 +62,7 @@ public class StatisticsObserver implements MapChangeListener {
         }
     }
 
+    //FIXME:
     private void objectAdded(Vector2d position) {
         objectsOnCell.merge(position, 1, (a, b) -> a + b);
     }
@@ -113,8 +115,26 @@ public class StatisticsObserver implements MapChangeListener {
         return counter;
     }
 
+    // FIXME: temporary hack, may be slow
     public Animal animalWithMostDescendants() {
-        // TODO: this
-        return null;
+        Optional<Animal> mx1 = aliveAnimals.stream().reduce(
+                (a, b) ->
+                        (a.countDescendants() > b.countDescendants()) ? a : b
+        );
+        Optional<Animal> mx2 = deadAnimals.stream().reduce(
+                (a, b) ->
+                        (a.countDescendants() > b.countDescendants()) ? a : b
+        );
+
+        if(mx1.isEmpty()){
+            return mx2.get();
+        }
+        if(mx2.isEmpty()) {
+            return mx1.get();
+        }
+
+        Animal a = mx1.get();
+        Animal b = mx2.get();
+        return (a.countDescendants() > b.countDescendants()) ? a : b;
     }
 }

@@ -43,4 +43,12 @@ public class BoundaryTest {
             }
         }
     }
+
+    @Test
+    public void contained_vectors_single() {
+        Boundary b1 = new Boundary(new Vector2d(0, 0), new Vector2d(0, 0));
+
+        assertEquals(b1.containedVectors().size(), 1);
+        assertEquals(b1.containedVectors().get(0), new Vector2d(0, 0));
+    }
 }

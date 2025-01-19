@@ -1,4 +1,4 @@
-package agh.oop.model;
+package agh.oop.model.animal;
 
 /**
  * GenotypeCreator mutating genes to completely random ones.

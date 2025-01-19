@@ -1,5 +1,8 @@
-package agh.oop.model;
+package agh.oop.model.animal;
 
+import agh.oop.model.MapDirection;
+import agh.oop.model.MoveValidator;
+import agh.oop.model.Vector2d;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

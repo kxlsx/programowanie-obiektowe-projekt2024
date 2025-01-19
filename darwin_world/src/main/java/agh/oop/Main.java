@@ -1,6 +1,13 @@
 package agh.oop;
 
+import agh.oop.simulation.SimulationFactory;
+import agh.oop.simulation.config.MapType;
+import agh.oop.simulation.config.MutationMode;
+import agh.oop.simulation.config.SimulationConfiguration;
 import agh.oop.model.*;
+import agh.oop.simulation.config.PlantGrowthMode;
+import agh.oop.simulation.Simulation;
+import agh.oop.simulation.StatisticsObserver;
 
 import java.util.List;
 
@@ -25,7 +32,8 @@ public class Main {
                 PlantGrowthMode.EQUATOR,
                 MutationMode.FULL_RANDOM);
         StatisticsObserver so = new StatisticsObserver(new Boundary(new Vector2d(0, 0), mapSize));
-        Simulation simulation = new Simulation(config, List.of(so));
+        Simulation simulation = SimulationFactory.createFromConfig(config, List.of(so));
+
         while (true) {
             simulation.advance();
             System.out.println(so.aliveAnimalCount() + " " + so.deadAnimalCount()

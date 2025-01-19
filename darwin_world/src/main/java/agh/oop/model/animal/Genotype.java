@@ -1,4 +1,6 @@
-package agh.oop.model;
+package agh.oop.model.animal;
+
+import agh.oop.model.MapDirection;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
