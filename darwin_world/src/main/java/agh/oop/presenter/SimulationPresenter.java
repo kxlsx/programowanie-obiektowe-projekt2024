@@ -1,86 +1,71 @@
 package agh.oop.presenter;
 
 
-import agh.oop.model.Shape;
+import agh.oop.model.Boundary;
 import agh.oop.model.SimulationProgressListener;
 import agh.oop.simulation.Simulation;
+import agh.oop.simulation.StatisticsObserver;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.geometry.HPos;
-import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+
+import java.util.ArrayList;
 
 public class SimulationPresenter implements SimulationProgressListener {
     public GridPane mapGrid;
+    public Label numberOfAnimals;
+    public Label numberOfPlants;
+    public Label numberOfFreeCells;
+    public Label mostPopularGenotype;
+    public Label averageEnergy;
+    public Label averageLifespan;
+    public Label averageChildrenCount;
+    public Label deathDay;
+    public Label daysAlive;
+    public Label numberOfDescendants;
+    public Label numberOfChildren;
+    public Label plantsConsumed;
+    public Label energy;
+    public Label nextMove;
+    public Label genotype;
     private Simulation simulation;
+    private StatisticsObserver statisticsObserver;
+    private MapView mapView;
+    private StatisticsView statisticsView;
+    private AnimalFateView animalFateView;
 
     public void initialize(Simulation simulation) {
         this.simulation = simulation;
+
+        statisticsObserver = new StatisticsObserver(simulation.getMap().getBounds(), simulation.getPlantCreator().getPreferredRegion());
+        simulation.getMap().addObserver(statisticsObserver);
+        statisticsView = new StatisticsView(numberOfAnimals, numberOfPlants, numberOfFreeCells, mostPopularGenotype, averageEnergy, averageLifespan, averageChildrenCount, statisticsObserver);
+
+        animalFateView = new AnimalFateView(genotype, nextMove, energy, plantsConsumed, numberOfChildren, numberOfDescendants, daysAlive, deathDay, statisticsObserver);
+
+        mapView = new MapView(mapGrid, simulation.getMap(), animalFateView);
+
+        animalFateView.setMapView(mapView);
     }
 
-    public void drawMap() {
-        clearGrid();
-        final int CELL_WIDTH = 50;
-        final int CELL_HEIGHT = 50;
-
-        var map = simulation.getMap();
-
-        int columns = map.getBounds().width();
-        int rows = map.getBounds().height();
-
-        for(int y = 0; y < rows; y++) {
-            mapGrid.getRowConstraints().add(new RowConstraints(CELL_HEIGHT));
-        }
-        for(int x = 0; x < columns; x++) {
-            mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
-        }
-
-        for(var position : map.getBounds().containedVectors()) {
-            var elements = map.worldElementsAt(position);
-            for(var element : elements) {
-                drawShape(element.getShape(), position.getX(), position.getY());
-            }
-        }
-    }
-
-    private void drawShape(Shape shape, int x, int y) {
-        switch (shape.getType()) {
-            case CIRCLE -> drawCircle(shape.getColor(), shape.getAlpha(), x, y);
-            case SQUARE -> drawRect(shape.getColor(), shape.getAlpha(), x, y);
-        }
-    }
-
-    private void drawRect(Color color, double alpha, int x, int y) {
-        var rectangle = new Rectangle(50, 50);
-        rectangle.setFill(color);
-        rectangle.setStroke(Color.BLACK);
-        rectangle.setOpacity(alpha);
-        mapGrid.add(rectangle, x, y);
-        GridPane.setHalignment(rectangle, HPos.CENTER);
-    }
-
-    private void drawCircle(Color color, double alpha, int x, int y) {
-        var circle = new Circle(25);
-        circle.setFill(color);
-        circle.setOpacity(alpha);
-        mapGrid.add(circle, x, y);
-        GridPane.setHalignment(circle, HPos.CENTER);
-    }
-
-
-    private void clearGrid() {
-        mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst()); // hack to retain visible grid lines
-        mapGrid.getColumnConstraints().clear();
-        mapGrid.getRowConstraints().clear();
+    public void refresh(Boundary mapBoundary, ArrayList<MapViewDrawable> toDraw) {
+        statisticsView.updateUi();
+        animalFateView.updateUi();
+        mapView.setToDraw(mapBoundary, toDraw);
+        mapView.updateUi();
     }
 
     @Override
     public void afterAdvance() {
-        Platform.runLater(this::drawMap);
+        ArrayList<MapViewDrawable> toDraw = new ArrayList<>();
+        for(var pos : simulation.getMap().getBounds().containedVectors()) {
+            for(var element : simulation.getMap().worldElementsAt(pos)) {
+                toDraw.add(new MapViewDrawable(element.getShape(), pos.deepCopy(), element));
+            }
+        }
+        var boundary = simulation.getMap().getBounds().deepCopy();
+        Platform.runLater(() -> refresh(boundary, toDraw) );
     }
 
     public void onPause(ActionEvent actionEvent) {
@@ -89,5 +74,15 @@ public class SimulationPresenter implements SimulationProgressListener {
 
     public void onUnpause(ActionEvent actionEvent) {
         simulation.unpause();
+    }
+
+    public void onHighlightMostPopularGenotype(ActionEvent actionEvent) {
+        mapView.setHighlightedCells(statisticsObserver.getMostPopularGenotypePositions());
+        mapView.updateUi();
+    }
+
+    public void onHighlightPlantsPreferredRegion(ActionEvent actionEvent) {
+        mapView.highlightPlantsPreferredRegion(statisticsObserver.getPlantsPreferredRegion());
+        mapView.updateUi();
     }
 }

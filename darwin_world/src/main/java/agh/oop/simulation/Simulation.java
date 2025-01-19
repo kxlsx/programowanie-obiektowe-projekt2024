@@ -142,6 +142,14 @@ public class Simulation implements Runnable {
     }
 
     /**
+     *
+     * @return simulation's PlantCreator object.
+     */
+    public PlantCreator getPlantCreator() {
+        return plantCreator;
+    }
+
+    /**
      * Adds listener that gets notified every time advance finishes.
      *
      * @param listener new listener to add

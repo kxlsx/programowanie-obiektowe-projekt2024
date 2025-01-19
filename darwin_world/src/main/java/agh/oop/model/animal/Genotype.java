@@ -47,6 +47,10 @@ public class Genotype {
         return facing.rotateRight(times);
     }
 
+    public int getNextValue() {
+        return genes[currentGeneIndex];
+    }
+
     /**
      * @return the internal gene array as a stream of ints.
      */
@@ -56,5 +60,14 @@ public class Genotype {
 
     public int[] getGenes() {
         return genes;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(genes);
+    }
+
+    public Genotype deepCopy() {
+        return new Genotype(genes.clone(), currentGeneIndex);
     }
 }

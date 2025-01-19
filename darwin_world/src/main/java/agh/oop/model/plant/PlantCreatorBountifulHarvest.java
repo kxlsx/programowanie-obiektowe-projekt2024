@@ -31,4 +31,9 @@ public class PlantCreatorBountifulHarvest implements PlantCreator {
             }
         }
     }
+
+    @Override
+    public Boundary getPreferredRegion() {
+        return bigPlantsRegion;
+    }
 }
