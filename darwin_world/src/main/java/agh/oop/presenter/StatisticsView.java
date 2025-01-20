@@ -25,12 +25,13 @@ public class StatisticsView {
     }
 
     void updateUi() {
-        numberOfAnimals.setText(String.valueOf(statistics.aliveAnimalCount()));
-        numberOfPlants.setText(String.valueOf(statistics.plantCount()));
-        numberOfFreeCells.setText(String.valueOf(statistics.freeCellsCount()));
-        mostPopularGenotype.setText(String.valueOf(statistics.animalWithMostDescendants().getGenes()));
-        averageEnergy.setText(String.valueOf(statistics.averageEnergy()));
-        averageLifespan.setText(String.valueOf(statistics.averageDeadLifespan()));
-        averageChildrenCount.setText(String.valueOf(statistics.averageAliveChildCount()));
+        var simulationStatistics = statistics.getSimulationStatistics();
+        numberOfAnimals.setText(String.valueOf(simulationStatistics.aliveAnimalCount()));
+        numberOfPlants.setText(String.valueOf(simulationStatistics.plantCount()));
+        numberOfFreeCells.setText(String.valueOf(simulationStatistics.freeCellsCount()));
+        mostPopularGenotype.setText(simulationStatistics.mostPopularGenotype().toString());
+        averageEnergy.setText(String.valueOf(simulationStatistics.averageEnergy()));
+        averageLifespan.setText(String.valueOf(simulationStatistics.averageDeadLifespan()));
+        averageChildrenCount.setText(String.valueOf(simulationStatistics.averageAliveChildCount()));
     }
 }
