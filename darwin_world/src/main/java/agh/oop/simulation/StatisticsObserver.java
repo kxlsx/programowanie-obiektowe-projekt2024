@@ -173,3 +173,12 @@ public class StatisticsObserver implements MapChangeListener {
         return (a.countDescendants() > b.countDescendants()) ? a : b;
     }
 }
+
+/*
+TODO
+Add statistics to be returned in record
+Add better pause thing
+Add frame time to configuration
+Fix creating plants at start
+Bountiful harvest region
+ */
