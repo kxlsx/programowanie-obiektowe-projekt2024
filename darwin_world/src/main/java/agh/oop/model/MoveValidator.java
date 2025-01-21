@@ -1,5 +1,7 @@
 package agh.oop.model;
 
+import javafx.util.Pair;
+
 /**
  * Interface used for correcting out of bounds moves.
  */
@@ -9,5 +11,5 @@ public interface MoveValidator {
      * @param position position to check.
      * @return new position (can be the same as the passed one).
      */
-    Vector2d correctPosition(Vector2d position);
+    Pair<Vector2d, MapDirection> correctHeading(Vector2d position, MapDirection direction);
 }

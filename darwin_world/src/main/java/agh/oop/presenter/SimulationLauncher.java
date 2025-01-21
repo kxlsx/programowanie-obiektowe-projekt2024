@@ -1,7 +1,9 @@
 package agh.oop.presenter;
 
 import agh.oop.model.Vector2d;
+import agh.oop.simulation.AnimalTracker;
 import agh.oop.simulation.SimulationFactory;
+import agh.oop.simulation.StatisticsObserver;
 import agh.oop.simulation.config.MapType;
 import agh.oop.simulation.config.MutationMode;
 import agh.oop.simulation.config.PlantGrowthMode;
@@ -49,14 +51,14 @@ public class SimulationLauncher {
         Vector2d mapSize = new Vector2d(10, 10);
         configuration = new SimulationConfiguration(
             mapSize,
-            3,
-            1,
-            1,
+            4,
+            5,
+            2,
             10,
             10,
             2,
             1,
-            1,
+            5,
             MapType.NORMAL,
             PlantGrowthMode.EQUATOR,
             MutationMode.FULL_RANDOM);
@@ -78,9 +80,20 @@ public class SimulationLauncher {
     }
 
     private void initPresenter(SimulationPresenter presenter, Stage stage) {
-        var simulation = SimulationFactory.createFromConfig(configuration, List.of(), List.of(presenter));
+        var animalTracker = new AnimalTracker();
+        var simulation = SimulationFactory.createFromConfig(
+                configuration,
+                List.of(),
+                List.of(presenter, animalTracker)
+        );
+        var statisticsObserver = new StatisticsObserver(
+                simulation.getMap().getBounds(),
+                simulation.getPlantCreator().getPreferredRegion()
+        );
+        simulation.getMap().addObserver(statisticsObserver);
+
         stage.setOnCloseRequest(event -> simulation.stop());
-        presenter.initialize(simulation);
+        presenter.initialize(simulation, statisticsObserver, animalTracker);
         var thread = new Thread(simulation);
         thread.start();
     }

@@ -12,4 +12,4 @@ public record AnimalFateStatistics(
         int numberOfChildren,
         int numberOfDescendants,
         long age,
-        int deathDay) {}
+        long deathDay) {}

@@ -5,5 +5,6 @@ import agh.oop.model.WorldMap;
 
 public interface PlantCreator {
     void createPlants(WorldMap worldMap);
+    void createPlants(WorldMap worldMap, int maxPlants);
     Boundary getPreferredRegion();
 }

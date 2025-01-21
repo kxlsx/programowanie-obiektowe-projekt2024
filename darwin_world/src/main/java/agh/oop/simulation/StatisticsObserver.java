@@ -14,8 +14,7 @@ public class StatisticsObserver implements MapChangeListener {
     private final Set<Animal> deadAnimals;
 
     private final Set<Plant> plants;
-    private final Map<Vector2d, Integer> objectsOnCell;
-    private Animal trackedAnimal;
+    private final Boundary mapBounds;
     private final Boundary plantsPreferredRegion;
 
     public StatisticsObserver(Boundary mapBounds, Boundary plantsPreferredRegion) {
@@ -23,87 +22,59 @@ public class StatisticsObserver implements MapChangeListener {
         deadAnimals = new HashSet<Animal>();
         plants = new HashSet<>();
 
-        objectsOnCell = new HashMap<>();
-        mapBounds.containedVectors().forEach(
-                v -> objectsOnCell.put(v, 0)
-        );
+        this.mapBounds = mapBounds;
 
         this.plantsPreferredRegion = plantsPreferredRegion;
     }
 
-    public synchronized void setTrackedAnimal(Animal animal) {
-        trackedAnimal = animal;
-    }
-
     public synchronized Collection<Vector2d> getMostPopularGenotypePositions() {
-        // TODO
-        return List.of();
+        ArrayList<Vector2d> positions = new ArrayList<>();
+        HashSet<Animal> visited = new HashSet<>();
+        Stack<Animal> stack = new Stack<>();
+
+        var start = this.animalWithMostDescendants();
+        visited.add(start);
+        stack.push(start);
+        while(!stack.empty()) {
+            Animal v = stack.pop();
+            if(!v.isDead()) {
+                positions.add(v.getPosition());
+            }
+
+            for(Animal child : v.getChildren()) {
+                if(!visited.contains(child)) {
+                    visited.add(child);
+                    stack.push(child);
+                }
+            }
+        }
+        return positions;
     }
 
     public synchronized Boundary getPlantsPreferredRegion() {
         return plantsPreferredRegion;
     }
 
-    public synchronized AnimalFateStatistics getTrackedAnimalStatistics() {
-        if(trackedAnimal == null) {
-            return null;
-        }
-        return new AnimalFateStatistics(
-                trackedAnimal.getPosition().deepCopy(),
-                trackedAnimal.getGenes().deepCopy(),
-                trackedAnimal.getGenes().getNextValue(),
-                trackedAnimal.getEnergy(),
-                0, // TODO
-                trackedAnimal.getChildren().size(),
-                trackedAnimal.countDescendants(),
-                trackedAnimal.getBirthDate(),
-                0); // TODO
-    }
-
     @Override
     public synchronized void onAnimalAdd(Animal animal) {
-        if(deadAnimals.contains(animal)) {
-            deadAnimals.remove(animal);
-        }
-
+        deadAnimals.remove(animal);
         aliveAnimals.add(animal);
-
-        objectAdded(animal.getPosition());
     }
 
     @Override
     public synchronized void onAnimalRemove(Animal animal) {
         aliveAnimals.remove(animal);
         deadAnimals.add(animal);
-
-        objectRemoved(animal.getPosition());
     }
 
     @Override
     public synchronized void onPlantAdd(Plant plant) {
         plants.add(plant);
-
-        for(Vector2d pos : plant.getBounds().containedVectors()) {
-            objectAdded(pos);
-        }
     }
 
     @Override
     public synchronized void onPlantRemove(Plant plant) {
         plants.remove(plant);
-
-        for(Vector2d pos : plant.getBounds().containedVectors()) {
-            objectRemoved(pos);
-        }
-    }
-
-    //FIXME:
-    private void objectAdded(Vector2d position) {
-        objectsOnCell.merge(position, 1, (a, b) -> a + b);
-    }
-
-    private void objectRemoved(Vector2d position) {
-        objectsOnCell.merge(position, -1, (a, b) -> a + b);
     }
 
     public synchronized SimulationStatistics getSimulationStatistics() {
@@ -158,14 +129,18 @@ public class StatisticsObserver implements MapChangeListener {
 
     private int freeCellsCount() {
         int counter = 0;
-        for(int c : objectsOnCell.values()) {
-            if(c == 0) counter += 1;
+        Set<Vector2d> usedPositions = new HashSet<Vector2d>();
+
+        aliveAnimals.forEach(animal -> usedPositions.add(animal.getPosition()));
+        plants.forEach(plant -> usedPositions.addAll(plant.getBounds().containedVectors()));
+
+        for(Vector2d pos : mapBounds.containedVectors()) {
+            if(!usedPositions.contains(pos)) counter++;
         }
         return counter;
     }
 
-    // FIXME: temporary hack, may be slow
-    private Animal animalWithMostDescendants() {
+    private synchronized Animal animalWithMostDescendants() {
         Optional<Animal> mx1 = aliveAnimals.stream().reduce(
                 (a, b) ->
                         (a.countDescendants() > b.countDescendants()) ? a : b
@@ -187,12 +162,3 @@ public class StatisticsObserver implements MapChangeListener {
         return (a.countDescendants() > b.countDescendants()) ? a : b;
     }
 }
-
-/*
-TODO
-Add statistics to be returned in record
-Add better pause thing
-Add frame time to configuration
-Fix creating plants at start
-Bountiful harvest region
- */

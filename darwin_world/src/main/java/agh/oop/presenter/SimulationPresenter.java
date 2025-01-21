@@ -2,7 +2,9 @@ package agh.oop.presenter;
 
 
 import agh.oop.model.Boundary;
-import agh.oop.model.SimulationProgressListener;
+import agh.oop.model.animal.Animal;
+import agh.oop.simulation.AnimalTracker;
+import agh.oop.simulation.SimulationProgressListener;
 import agh.oop.simulation.Simulation;
 import agh.oop.simulation.StatisticsObserver;
 import javafx.application.Platform;
@@ -35,14 +37,36 @@ public class SimulationPresenter implements SimulationProgressListener {
     private StatisticsView statisticsView;
     private AnimalFateView animalFateView;
 
-    public void initialize(Simulation simulation) {
+    public void initialize(
+            Simulation simulation,
+            StatisticsObserver statisticsObserver,
+            AnimalTracker animalTracker
+    ) {
         this.simulation = simulation;
+        this.statisticsObserver = statisticsObserver;
 
-        statisticsObserver = new StatisticsObserver(simulation.getMap().getBounds(), simulation.getPlantCreator().getPreferredRegion());
-        simulation.getMap().addObserver(statisticsObserver);
-        statisticsView = new StatisticsView(numberOfAnimals, numberOfPlants, numberOfFreeCells, mostPopularGenotype, averageEnergy, averageLifespan, averageChildrenCount, statisticsObserver);
+        statisticsView = new StatisticsView(
+                numberOfAnimals,
+                numberOfPlants,
+                numberOfFreeCells,
+                mostPopularGenotype,
+                averageEnergy,
+                averageLifespan,
+                averageChildrenCount,
+                statisticsObserver
+        );
 
-        animalFateView = new AnimalFateView(genotype, nextMove, energy, plantsConsumed, numberOfChildren, numberOfDescendants, daysAlive, deathDay, statisticsObserver);
+        animalFateView = new AnimalFateView(
+                genotype,
+                nextMove,
+                energy,
+                plantsConsumed,
+                numberOfChildren,
+                numberOfDescendants,
+                daysAlive,
+                deathDay,
+                animalTracker
+        );
 
         mapView = new MapView(mapGrid, simulation.getMap(), animalFateView);
 
@@ -85,4 +109,8 @@ public class SimulationPresenter implements SimulationProgressListener {
         mapView.highlightPlantsPreferredRegion(statisticsObserver.getPlantsPreferredRegion());
         mapView.updateUi();
     }
+
+    public void animalAte(Animal animal) { }
+
+    public void animalDied(Animal animal, long date) { }
 }

@@ -4,6 +4,7 @@ import agh.oop.model.animal.Animal;
 import agh.oop.model.exception.OutOfBoundsException;
 import agh.oop.model.exception.PlantOverlapException;
 import agh.oop.model.plant.Plant;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -191,15 +192,19 @@ public class WorldMap implements MoveValidator{
      * @return a new position (or the same).
      */
     @Override
-    public Vector2d correctPosition(Vector2d position) {
+    public Pair<Vector2d, MapDirection> correctHeading(Vector2d position, MapDirection direction) {
         int x = position.getX();
         int y = position.getY();
 
-        // prevent from exiting bounds vertically
+        MapDirection dir = direction;
+
+        // prevent from exiting bounds vertically and rotate 180 degrees
         if(bounds.isOobDown(y)) {
             y = bounds.getLowerLeft().getY();
+            dir = dir.rotateRight(4);
         } else if (bounds.isOobUp(y)) {
             y = bounds.getUpperRight().getY();
+            dir = dir.rotateRight(4);
         }
 
         // loop back around if exiting horizontally
@@ -209,7 +214,7 @@ public class WorldMap implements MoveValidator{
             x = bounds.getLowerLeft().getX();
         }
 
-        return new Vector2d(x, y);
+        return new Pair<>(new Vector2d(x, y), dir);
     }
 
     public void print() {
