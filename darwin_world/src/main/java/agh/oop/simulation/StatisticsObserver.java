@@ -77,19 +77,33 @@ public class StatisticsObserver implements MapChangeListener {
         plants.remove(plant);
     }
 
-    public synchronized int aliveAnimalCount() {
+    public synchronized SimulationStatistics getSimulationStatistics() {
+        return new SimulationStatistics(
+                aliveAnimalCount(),
+                deadAnimalCount(),
+                plantCount(),
+                averageEnergy(),
+                averageDeadLifespan(),
+                averageAliveChildCount(),
+                freeCellsCount(),
+                animalWithMostDescendants().getGenes().deepCopy()
+        );
+    }
+
+
+    private int aliveAnimalCount() {
         return aliveAnimals.size();
     }
 
-    public synchronized int deadAnimalCount() {
+    private int deadAnimalCount() {
         return deadAnimals.size();
     }
 
-    public synchronized int plantCount() {
+    private int plantCount() {
         return plants.size();
     }
 
-    public synchronized double averageEnergy() {
+    private double averageEnergy() {
         double avg = 0;
         for(Animal a : aliveAnimals) {
             avg += a.getEnergy();
@@ -97,7 +111,7 @@ public class StatisticsObserver implements MapChangeListener {
         return avg / aliveAnimalCount();
     }
 
-    public synchronized double averageDeadLifespan() {
+    private double averageDeadLifespan() {
         double avg = 0;
         for(Animal a : deadAnimals) {
             avg += a.getBirthDate();
@@ -105,7 +119,7 @@ public class StatisticsObserver implements MapChangeListener {
         return avg / deadAnimalCount();
     }
 
-    public synchronized double averageAliveChildCount() {
+    private double averageAliveChildCount() {
         double avg = 0;
         for(Animal a : aliveAnimals) {
             avg += a.getChildren().size();
@@ -113,7 +127,7 @@ public class StatisticsObserver implements MapChangeListener {
         return avg / aliveAnimalCount();
     }
 
-    public synchronized int freeCellsCount() {
+    private int freeCellsCount() {
         int counter = 0;
         Set<Vector2d> usedPositions = new HashSet<Vector2d>();
 
@@ -126,7 +140,7 @@ public class StatisticsObserver implements MapChangeListener {
         return counter;
     }
 
-    public synchronized Animal animalWithMostDescendants() {
+    private synchronized Animal animalWithMostDescendants() {
         Optional<Animal> mx1 = aliveAnimals.stream().reduce(
                 (a, b) ->
                         (a.countDescendants() > b.countDescendants()) ? a : b

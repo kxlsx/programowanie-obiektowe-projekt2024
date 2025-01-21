@@ -24,7 +24,8 @@ public class Simulation implements Runnable {
     private final ArrayList<SimulationProgressListener> progressListeners = new ArrayList<>();
 
     private final AtomicBoolean running = new AtomicBoolean(true);
-    private final AtomicBoolean paused = new AtomicBoolean(false);
+    //private final AtomicBoolean paused = new AtomicBoolean(false);
+    private final PauseMechanism pause;
 
     /**
      * Create Simulation wit hpassed parameters.
@@ -55,7 +56,7 @@ public class Simulation implements Runnable {
         this.energyFromPlant = energyFromPlant;
         this.reproductionEnergyThreshold = reproductionEnergyThreshold;
         time = 0;
-
+        pause = new PauseMechanism();
 
         // create initial animals
         this.animals = new ArrayList<>();
@@ -73,7 +74,8 @@ public class Simulation implements Runnable {
      * stops simulation
      */
     public void stop() {
-        paused.set(false);
+        //paused.set(false);
+        pause.unpause();
         running.set(false);
     }
 
@@ -86,14 +88,13 @@ public class Simulation implements Runnable {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
-                System.out.println("Simulation interrupted");
+                return;
             }
 
-            while(paused.get()) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException _) {
-                }
+            try {
+                pause.waitOnPause();
+            } catch (InterruptedException e) {
+                return;
             }
 
             advance();
@@ -105,7 +106,7 @@ public class Simulation implements Runnable {
      * Pauses simulation.
      */
     public void pause() {
-        paused.set(true);
+        pause.pause();
     }
 
 
@@ -113,7 +114,7 @@ public class Simulation implements Runnable {
      * Unpauses simulation.
      */
     public void unpause() {
-        paused.set(false);
+        pause.unpause();
     }
 
 
