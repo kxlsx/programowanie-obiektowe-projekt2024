@@ -1,7 +1,10 @@
 package agh.oop.model.animal;
 
+import agh.oop.model.Boundary;
 import agh.oop.model.MapDirection;
 import agh.oop.model.Vector2d;
+
+import java.util.Collection;
 
 /**
  * The default implementation of AnimalCreator

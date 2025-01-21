@@ -3,6 +3,7 @@ package agh.oop.model.animal;
 import agh.oop.model.*;
 
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -136,7 +137,9 @@ public class Animal implements WorldElement {
         Vector2d off = facing.toUnitVector();
 
         Vector2d newPos = position.add(off);
-        position = validator.correctPosition(newPos);
+        Pair<Vector2d, MapDirection> heading = validator.correctHeading(newPos, facing);
+        position = heading.getKey();
+        facing = heading.getValue();
         loseEnergy();
     }
 

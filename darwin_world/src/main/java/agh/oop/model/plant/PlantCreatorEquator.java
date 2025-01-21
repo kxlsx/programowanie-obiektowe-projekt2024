@@ -31,12 +31,20 @@ public class PlantCreatorEquator implements PlantCreator {
     }
 
     @Override
-    public void createPlants(WorldMap worldMap) {
+    public void createPlants(WorldMap worldMap, int maxPlants) {
+        int grownCount = 0;
         for(var position : worldMap.getBounds().containedVectors()) {
+            if(grownCount == maxPlants) break;
             if(diceGrow(worldMap, position)) {
                 worldMap.addPlant(new Plant(1, new Vector2d(position.getX(), position.getY())));
+                grownCount++;
             }
         }
+    }
+
+    @Override
+    public void createPlants(WorldMap worldMap) {
+        createPlants(worldMap, worldMap.getBounds().area());
     }
 
     @Override

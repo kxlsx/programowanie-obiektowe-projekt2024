@@ -19,10 +19,13 @@ public class SimulationFactory {
      * @param mapObservers a list of observers for the created map
      * @return a new Simulation.
      */
-    public static Simulation createFromConfig(SimulationConfiguration config, List<MapChangeListener> mapObservers, List<SimulationProgressListener> simulationObservers) {
+    public static Simulation createFromConfig(
+            SimulationConfiguration config,
+            List<MapChangeListener> mapObservers,
+            List<SimulationProgressListener> simulationObservers
+    ) {
         Boundary mapBoundary = new Boundary(new Vector2d(0, 0), config.getMapSize());
         WorldMap map = new WorldMap(mapBoundary);
-        ArrayList<Animal> animals = new ArrayList<>();
 
         mapObservers.forEach(ob -> map.addObserver(ob));
 
@@ -46,7 +49,7 @@ public class SimulationFactory {
         };
 
         var simulation = new Simulation(
-                map, animals, animalComparator, animalCreator, plantCreator, config.getEnergyFromPlant(), config.getReproductionEnergyThreshold(),
+                map, animalComparator, animalCreator, plantCreator, config.getEnergyFromPlant(), config.getReproductionEnergyThreshold(),
                 config.getInitialNumberOfAnimals(), config.getInitialNumberOfPlants()
         );
 

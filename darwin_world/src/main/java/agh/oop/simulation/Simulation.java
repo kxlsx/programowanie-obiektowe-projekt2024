@@ -1,6 +1,5 @@
 package agh.oop.simulation;
 
-import agh.oop.model.SimulationProgressListener;
 import agh.oop.model.WorldMap;
 import agh.oop.model.animal.Animal;
 import agh.oop.model.animal.AnimalComparator;
@@ -31,7 +30,6 @@ public class Simulation implements Runnable {
      * Create Simulation wit hpassed parameters.
      *
      * @param map simulation map object.
-     * @param animals list of animals(TODO).
      * @param animalComparator used to compare animals that fight for food or to reproduce.
      * @param animalCreator object used for reproduction and creation of animals.
      * @param plantCreator used for creating new animals.
@@ -42,7 +40,6 @@ public class Simulation implements Runnable {
      */
     public Simulation(
             WorldMap map,
-            List<Animal> animals,
             AnimalComparator animalComparator,
             AnimalCreator animalCreator,
             PlantCreator plantCreator,
@@ -52,7 +49,6 @@ public class Simulation implements Runnable {
             int initialNumberOfPlants
     ){
         this.map = map;
-        this.animals = animals;
         this.animalComparator = animalComparator;
         this.animalCreator = animalCreator;
         this.plantCreator = plantCreator;
@@ -62,6 +58,7 @@ public class Simulation implements Runnable {
 
 
         // create initial animals
+        this.animals = new ArrayList<>();
         for(int i = 0; i < initialNumberOfAnimals; i++) {
             var animal = animalCreator.create(time);
             animals.add(animal);
@@ -69,7 +66,7 @@ public class Simulation implements Runnable {
         }
 
         // create initial plants
-        plantCreator.createPlants(map); // TODO use initial number of plants
+        plantCreator.createPlants(map, initialNumberOfPlants);
     }
 
     /**
@@ -160,8 +157,11 @@ public class Simulation implements Runnable {
 
     private void removeDeadAnimals() {
         for (int i = 0; i < animals.size(); i++) {
-            if (animals.get(i).isDead()) {
-                map.removeAnimal(animals.get(i));
+            var animal = animals.get(i);
+            if (animal.isDead()) {
+                progressListeners.forEach(list -> list.animalDied(animal, time));
+
+                map.removeAnimal(animal);
                 animals.set(i, animals.getLast());
                 animals.removeLast();
             }
@@ -190,6 +190,8 @@ public class Simulation implements Runnable {
             var strongest = animalComparator.sort(animalsPerPlant.get(plant));
             strongest.getLast().addEnergy(plant.getEnergyMultiplier() * energyFromPlant);
             map.removePlant(plant);
+
+            progressListeners.forEach(list -> list.animalAte(strongest.getLast()));
         }
     }
 

@@ -2,6 +2,7 @@ package agh.oop.presenter;
 
 import agh.oop.model.WorldElement;
 import agh.oop.model.animal.Animal;
+import agh.oop.simulation.AnimalTracker;
 import agh.oop.simulation.StatisticsObserver;
 import javafx.scene.control.Label;
 
@@ -16,10 +17,20 @@ public class AnimalFateView implements WorldElementClickedListener {
     private final Label numberOfDescendants;
     private final Label daysAlive;
     private final Label deathDay;
-    private final StatisticsObserver statisticsObserver;
+    private final AnimalTracker animalTracker;
     private MapView mapView;
 
-    public AnimalFateView(Label genotype, Label nextMove, Label energy, Label plantsConsumed, Label numberOfChildren, Label numberOfDescendants, Label daysAlive, Label deathDay, StatisticsObserver statistics) {
+    public AnimalFateView(
+            Label genotype,
+            Label nextMove,
+            Label energy,
+            Label plantsConsumed,
+            Label numberOfChildren,
+            Label numberOfDescendants,
+            Label daysAlive,
+            Label deathDay,
+            AnimalTracker animalTracker
+    ) {
         this.genotype = genotype;
         this.nextMove = nextMove;
         this.energy = energy;
@@ -28,7 +39,7 @@ public class AnimalFateView implements WorldElementClickedListener {
         this.numberOfDescendants = numberOfDescendants;
         this.daysAlive = daysAlive;
         this.deathDay = deathDay;
-        this.statisticsObserver = statistics;
+        this.animalTracker = animalTracker;
     }
 
     public void setMapView(MapView mapView) {
@@ -36,8 +47,8 @@ public class AnimalFateView implements WorldElementClickedListener {
     }
 
     public void updateUi() {
-        if(statisticsObserver.getTrackedAnimalStatistics() != null) {
-            var statistics = statisticsObserver.getTrackedAnimalStatistics();
+        if(animalTracker.getTrackedAnimalStatistics() != null) {
+            var statistics = animalTracker.getTrackedAnimalStatistics();
             mapView.setHighlightedCells(List.of(statistics.position()));
             genotype.setText(statistics.genotype().toString());
             nextMove.setText(String.valueOf(statistics.nextMove()));
@@ -65,7 +76,7 @@ public class AnimalFateView implements WorldElementClickedListener {
     @Override
     public void onElementClicked(WorldElement element) {
         if(element instanceof Animal) {
-            statisticsObserver.setTrackedAnimal((Animal) element);
+            animalTracker.setTrackedAnimal((Animal) element);
             updateUi();
         }
     }
