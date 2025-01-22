@@ -13,6 +13,17 @@ public class StatisticsView {
     private final Label averageChildrenCount;
     private final StatisticsObserver statistics;
 
+    /**
+     *
+     * @param numberOfAnimals gui numberOfAnimals label.
+     * @param numberOfPlants gui numberOfPlants label.
+     * @param numberOfFreeCells gui numberOfFreeCells label.
+     * @param mostPopularGenotype gui mostPopularGenotype label.
+     * @param averageEnergy gui averageEnergy label.
+     * @param averageLifespan guiAverageLifespan label.
+     * @param averageChildrenCount guiAverageChildrenCount label.
+     * @param statistics instance of StatisticsObserver that will supply, required statistics.
+     */
     public StatisticsView(Label numberOfAnimals, Label numberOfPlants, Label numberOfFreeCells, Label mostPopularGenotype, Label averageEnergy, Label averageLifespan, Label averageChildrenCount, StatisticsObserver statistics) {
         this.numberOfAnimals = numberOfAnimals;
         this.numberOfPlants = numberOfPlants;

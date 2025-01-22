@@ -8,7 +8,11 @@ public class PlantCreatorEquator implements PlantCreator {
     private final double baseGrowthProbability;
     private final Boundary equator;
 
-
+    /**
+     * Create an PlantCreatorEquator with the passed parameters.
+     * @param plantsPerDay expected number of plants to grow per day.
+     * @param mapRegion map boundary.
+     */
     public PlantCreatorEquator(int plantsPerDay, Boundary mapRegion) {
         equator = new Boundary(
                 new Vector2d(mapRegion.getLowerLeft().getX(), mapRegion.getLowerLeft().getY() + (int)(mapRegion.height() * 0.4)),

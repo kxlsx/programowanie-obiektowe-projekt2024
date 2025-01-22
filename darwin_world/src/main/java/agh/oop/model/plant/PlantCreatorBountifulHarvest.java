@@ -4,14 +4,18 @@ import agh.oop.model.Boundary;
 import agh.oop.model.Vector2d;
 import agh.oop.model.WorldMap;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Random;
 
 public class PlantCreatorBountifulHarvest implements PlantCreator {
     private final float plantGrowthProbability;
     private final Boundary bigPlantsRegion;
 
+    /**
+     * Create an PlantCreatorBountifulHarvest with the passed parameters.
+     * @param plantsPerDay expected number of plants to grow per day.
+     * @param bigPlantsRegion area where big plants spawn (it is enough if upper-left corner fits).
+     * @param mapRegion map boundary.
+     */
     public PlantCreatorBountifulHarvest(int plantsPerDay, Boundary bigPlantsRegion, Boundary mapRegion) {
         this.plantGrowthProbability = (float) plantsPerDay / mapRegion.area();
         this.bigPlantsRegion = bigPlantsRegion;

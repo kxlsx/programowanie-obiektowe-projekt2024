@@ -2,6 +2,7 @@ package agh.oop.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Object representing a rectangular
@@ -123,5 +124,25 @@ public class Boundary {
             }
         }
         return vectors;
+    }
+
+    /**
+     *
+     * @return random Vector2d contained inside the rectangle represented by the boundary.
+     */
+    public Vector2d randomVector() {
+        return new Vector2d(ThreadLocalRandom.current().nextInt(lowerLeft.getX(), upperRight.getX()), ThreadLocalRandom.current().nextInt(lowerLeft.getY(), upperRight.getY()));
+    }
+
+    /**
+     *
+     * @return random Boundary contained inside the rectangle represented by the boundary.
+     */
+    public Boundary randomBoundary() {
+        int left = ThreadLocalRandom.current().nextInt(lowerLeft.getX(), upperRight.getX());
+        int right = ThreadLocalRandom.current().nextInt(left, upperRight.getX());
+        int up = ThreadLocalRandom.current().nextInt(lowerLeft.getY(), upperRight.getY());
+        int down = ThreadLocalRandom.current().nextInt(up, upperRight.getY());
+        return new Boundary(new Vector2d(left, up), new Vector2d(right, down));
     }
 }

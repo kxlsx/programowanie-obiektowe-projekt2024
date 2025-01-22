@@ -42,7 +42,7 @@ public class SimulationFactory {
             case PlantGrowthMode.BOUNTIFUL_HARVEST ->
                     new PlantCreatorBountifulHarvest(
                             config.getPlantGrowthPerDay(),
-                            new Boundary(new Vector2d(0, 0), new Vector2d(3, 3)), // TODO
+                            mapBoundary.randomBoundary(),
                             mapBoundary
                     );
         };

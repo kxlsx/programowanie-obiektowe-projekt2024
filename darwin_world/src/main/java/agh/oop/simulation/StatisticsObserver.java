@@ -17,6 +17,11 @@ public class StatisticsObserver implements MapChangeListener {
     private final Boundary mapBounds;
     private final Boundary plantsPreferredRegion;
 
+    /**
+     * Create StatisticsObserver from passed parameters.
+     * @param mapBounds map boundaries.
+     * @param plantsPreferredRegion plants preferred region.
+     */
     public StatisticsObserver(Boundary mapBounds, Boundary plantsPreferredRegion) {
         aliveAnimals = new HashSet<Animal>();
         deadAnimals = new HashSet<Animal>();
@@ -27,6 +32,10 @@ public class StatisticsObserver implements MapChangeListener {
         this.plantsPreferredRegion = plantsPreferredRegion;
     }
 
+    /**
+     *
+     * @return Positions of animals with most popular genotype, data is deep-copied and safe to use from non-simulation threads.
+     */
     public synchronized Collection<Vector2d> getMostPopularGenotypePositions() {
         ArrayList<Vector2d> positions = new ArrayList<>();
         HashSet<Animal> visited = new HashSet<>();
@@ -77,6 +86,10 @@ public class StatisticsObserver implements MapChangeListener {
         plants.remove(plant);
     }
 
+    /**
+     *
+     * @return SimulationStatistics record, data is deep-copied and safe to use from non-simulation threads.
+     */
     public synchronized SimulationStatistics getSimulationStatistics() {
         return new SimulationStatistics(
                 aliveAnimalCount(),

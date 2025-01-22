@@ -2,9 +2,6 @@ package agh.oop.model.animal;
 
 import agh.oop.model.Boundary;
 import agh.oop.model.MapDirection;
-import agh.oop.model.Vector2d;
-
-import java.util.Collection;
 
 /**
  * The default implementation of AnimalCreator
@@ -32,9 +29,9 @@ public class AnimalCreatorNormal implements AnimalCreator {
      * @return a new Animal
      */
     @Override
-    public Animal create(long time) {
+    public Animal create(long time, Boundary mapBoundary) {
         return new Animal(
-                new Vector2d(0, 0), // TODO: randomize pos
+                mapBoundary.randomVector(),
                 MapDirection.createRandomMapDirection(),
                 genotypeCreator.create(),
                 energyOnCreate,

@@ -110,7 +110,9 @@ public class SimulationPresenter implements SimulationProgressListener {
         mapView.updateUi();
     }
 
+    @Override
     public void animalAte(Animal animal) { }
 
+    @Override
     public void animalDied(Animal animal, long date) { }
 }

@@ -61,7 +61,7 @@ public class Simulation implements Runnable {
         // create initial animals
         this.animals = new ArrayList<>();
         for(int i = 0; i < initialNumberOfAnimals; i++) {
-            var animal = animalCreator.create(time);
+            var animal = animalCreator.create(time, map.getBounds());
             animals.add(animal);
             map.addAnimal(animal);
         }

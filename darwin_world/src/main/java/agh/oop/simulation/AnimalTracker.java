@@ -10,15 +10,26 @@ public class AnimalTracker implements SimulationProgressListener{
     private final Map<Animal, Long> animalDiedDate;
     private Animal trackedAnimal;
 
+    /**
+     * Creates AnimalTracker, by default no animal is tracked.
+     */
     public AnimalTracker() {
         animalEatCount = new HashMap<>();
         animalDiedDate = new HashMap<>();
     }
 
+    /**
+     *
+     * @param animal animal that will be tracked from now on.
+     */
     public synchronized void setTrackedAnimal(Animal animal) {
         trackedAnimal = animal;
     }
 
+    /**
+     *
+     * @return AnimalFateStatistics record, data is deep-copied and safe to use from non-simulation threads.
+     */
     public synchronized AnimalFateStatistics getTrackedAnimalStatistics() {
         if(trackedAnimal == null) {
             return null;
@@ -34,7 +45,7 @@ public class AnimalTracker implements SimulationProgressListener{
                 trackedAnimal.getGenes().deepCopy(),
                 trackedAnimal.getGenes().getNextValue(),
                 trackedAnimal.getEnergy(),
-                plantsEaten, // TODO
+                plantsEaten,
                 trackedAnimal.getChildren().size(),
                 trackedAnimal.countDescendants(),
                 trackedAnimal.getBirthDate(),
@@ -42,6 +53,7 @@ public class AnimalTracker implements SimulationProgressListener{
         );
     }
 
+    @Override
     public void animalAte(Animal animal) {
         animalEatCount.putIfAbsent(animal, 0);
 
@@ -51,9 +63,11 @@ public class AnimalTracker implements SimulationProgressListener{
         );
     }
 
+    @Override
     public void animalDied(Animal animal, long time) {
         animalDiedDate.put(animal, time);
     }
 
+    @Override
     public void afterAdvance() { }
 }

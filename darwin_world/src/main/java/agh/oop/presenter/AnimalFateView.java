@@ -19,6 +19,18 @@ public class AnimalFateView implements WorldElementClickedListener {
     private final AnimalTracker animalTracker;
     private MapView mapView;
 
+    /**
+     * Creates AnimalFateView from passed parameters.
+     * @param genotype gui genotype label.
+     * @param nextMove gui nextMove label.
+     * @param energy gui energy label.
+     * @param plantsConsumed gui plantsConsumed label.
+     * @param numberOfChildren gui numberOfChildren label.
+     * @param numberOfDescendants gui numberOfDescendants label.
+     * @param daysAlive gui daysAlive label.
+     * @param deathDay gui deathDay label.
+     * @param animalTracker instance of animalTracker that will supply, required statistics.
+     */
     public AnimalFateView(
             Label genotype,
             Label nextMove,
@@ -41,10 +53,17 @@ public class AnimalFateView implements WorldElementClickedListener {
         this.animalTracker = animalTracker;
     }
 
+    /**
+     * Set MapView used for highlighting tracked animal.
+     * @param mapView MapView to use.
+     */
     public void setMapView(MapView mapView) {
         this.mapView = mapView;
     }
 
+    /**
+     * updates animal fate statistics ui.
+     */
     public void updateUi() {
         if(animalTracker.getTrackedAnimalStatistics() != null) {
             var statistics = animalTracker.getTrackedAnimalStatistics();

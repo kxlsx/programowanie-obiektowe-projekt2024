@@ -19,28 +19,50 @@ public class MapView {
     private Boundary mapBoundary;
     private ArrayList<MapViewDrawable> toDraw;
 
+    /**
+     * Creates MapView from passed parameters.
+     * @param mapGrid the ui gadget used for displaying map.
+     * @param worldMap map that will be displayed.
+     * @param clickedListener listener that will get notified once some map object gets clicked/selected.
+     */
     public MapView(GridPane mapGrid, WorldMap worldMap, WorldElementClickedListener clickedListener) {
         this.mapGrid = mapGrid;
         this.clickedListener = clickedListener;
         highlighted = new HashSet<>();
     }
 
+    /**
+     * Set cells to highlight in next uiUpdates.
+     * @param highlighted collection of cells positions to highlight.
+     */
     public void setHighlightedCells(Collection<Vector2d> highlighted) {
         this.highlighted.clear();
         this.highlighted.addAll(highlighted);
     }
 
+    /**
+     *
+     * @param mapBoundary boundary of map to draw.
+     * @param toDraw list of that will be drawn next updateUi call.
+     */
     public void setToDraw(Boundary mapBoundary, ArrayList<MapViewDrawable> toDraw) {
         this.mapBoundary = mapBoundary;
         this.toDraw = toDraw;
     }
 
+    /**
+     * updates map ui.
+     */
     public void updateUi() {
         if(mapBoundary != null && toDraw != null) {
             drawMap();
         }
     }
 
+    /**
+     * Sets plants preferred region to highlight in ui.
+     * @param bounds the preffered region.
+     */
     public void highlightPlantsPreferredRegion(Boundary bounds) {
         setHighlightedCells(bounds.containedVectors());
     }
