@@ -25,7 +25,5 @@ public class SimulationApp extends Application {
         var scene = new Scene(viewRoot);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Simulation app");
-        //primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
-        //primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }
 }

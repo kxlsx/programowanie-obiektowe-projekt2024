@@ -9,7 +9,6 @@ import agh.oop.simulation.config.MutationMode;
 import agh.oop.simulation.config.PlantGrowthMode;
 import agh.oop.simulation.config.SimulationConfiguration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SimulationFactory {

@@ -3,6 +3,7 @@ package agh.oop.model.animal;
 import agh.oop.model.MapDirection;
 import agh.oop.model.MoveValidator;
 import agh.oop.model.Vector2d;
+import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,8 +45,8 @@ class AnimalTest {
     void move() {
         class Validator implements MoveValidator {
             @Override
-            public Vector2d correctPosition(Vector2d position) {
-                return position;
+            public Pair<Vector2d, MapDirection> correctHeading(Vector2d position, MapDirection direction) {
+                return new Pair<>(position, direction);
             }
         }
 

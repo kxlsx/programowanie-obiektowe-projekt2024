@@ -3,7 +3,6 @@ package agh.oop.presenter;
 import agh.oop.model.WorldElement;
 import agh.oop.model.animal.Animal;
 import agh.oop.simulation.AnimalTracker;
-import agh.oop.simulation.StatisticsObserver;
 import javafx.scene.control.Label;
 
 import java.util.List;

@@ -3,7 +3,6 @@ package agh.oop.simulation;
 import agh.oop.model.animal.Animal;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AnimalTracker implements SimulationProgressListener{
