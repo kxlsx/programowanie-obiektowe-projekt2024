@@ -1,4 +1,4 @@
-# projekt-programowanie-obiektowe2024
+# programowanie-obiektowe-projekt2024
 Repozytorium zawiera projekt z Programowania obiektowego na WI AGH 2024/2025
 napisany przeze mnie i [Zamyk](https://github.com/Zamyk).
 
